@@ -1,3 +1,5 @@
+using UnityEngine;
+
 namespace Enemy
 {
     public class EnemyModel
@@ -7,6 +9,7 @@ namespace Enemy
         public float MoveSpeed;
         public float Damage;
         public float AttackCooldown;
+        public Transform target;
 
         public EnemyModel(float maxHealth, float speed, float damage, float cooldown)
         {

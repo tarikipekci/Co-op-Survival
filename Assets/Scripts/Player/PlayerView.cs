@@ -6,6 +6,7 @@ namespace Player
     {
         private static readonly int MoveX = Animator.StringToHash("MoveX");
         private static readonly int MoveY = Animator.StringToHash("MoveY");
+        private static readonly int Speed = Animator.StringToHash("Speed");
         [SerializeField] private Animator animator;
         private SpriteRenderer spriteRenderer;
         private Rigidbody2D rb;
@@ -28,7 +29,8 @@ namespace Player
             {
                 animator.SetFloat(MoveX, Mathf.Abs(rb.linearVelocityX));
                 animator.SetFloat(MoveY, rb.linearVelocityY);
-                Debug.Log("X" + rb.linearVelocityX + "Y" + rb.linearVelocityY);
+                animator.SetFloat(Speed, direction.sqrMagnitude);
+                //Debug.Log("X" + rb.linearVelocityX + "Y" + rb.linearVelocityY);
             }
         }
     }

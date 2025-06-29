@@ -2,6 +2,7 @@ using System.Collections;
 using Enemy;
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.AI;
 
 namespace Manager
 {
@@ -12,7 +13,7 @@ namespace Manager
         [SerializeField] private float waveDelay = 5f;
         [SerializeField] private int enemiesPerWave = 3;
 
-        private int currentWave = 0;
+        private int currentWave;
 
         public override void OnNetworkSpawn()
         {
@@ -46,6 +47,7 @@ namespace Manager
                 var model = new EnemyModel(50, 1.5f, 10, 1.2f); // hp, speed, damage, cooldown
                 var behavior = new ChasePlayer();
                 enemyInstance.GetComponent<EnemyController>().Initialize(model, behavior);
+                enemyInstance.GetComponent<NavMeshAgent>().enabled = true;
             }
         }
     }

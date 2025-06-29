@@ -15,7 +15,7 @@ namespace Player
             view = GetComponent<PlayerView>();
         }
 
-        private void Update()
+        private void FixedUpdate()
         {
             if (!IsOwner) return;
 

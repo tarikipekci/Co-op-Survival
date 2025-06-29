@@ -1,5 +1,6 @@
 using UnityEngine;
 using Unity.Netcode;
+using UnityEngine.AI;
 
 namespace Enemy
 {
@@ -9,26 +10,51 @@ namespace Enemy
         private EnemyModel model;
         private EnemyView view;
         private IEnemyBehavior behavior;
+        private NavMeshAgent agent;
 
         private float lastAttackTime;
+
+        public NetworkVariable<Vector2> NetworkDirection = new NetworkVariable<Vector2>(
+            Vector2.zero);
+
+        public override void OnNetworkSpawn()
+        {
+            view = GetComponent<EnemyView>();
+
+            if (IsClient)
+            {
+                NetworkDirection.OnValueChanged += OnDirectionChanged;
+            }
+        }
 
         public void Initialize(EnemyModel modelData, IEnemyBehavior behaviorLogic)
         {
             model = modelData;
             behavior = behaviorLogic;
-            view = GetComponent<EnemyView>();
+            agent = GetComponent<NavMeshAgent>();
+            agent.updateRotation = false;
+            agent.updateUpAxis = false;
         }
 
-        private void Update()
+        private void FixedUpdate()
         {
-            if (!IsServer) return; 
+            if (!IsServer) return;
 
             behavior?.Execute(this);
         }
 
         public void Move(Vector2 direction)
         {
-            transform.position += (Vector3)(direction * (model.MoveSpeed * Time.deltaTime));
+            model.target = FindClosestPlayer();
+            agent.SetDestination(model.target.position);
+
+            //Server updates the value
+            NetworkDirection.Value = direction;
+        }
+
+        private void OnDirectionChanged(Vector2 previous, Vector2 current)
+        {
+            view.PlayWalkAnimation(current);
         }
 
         public void TryAttack(Transform target)
@@ -40,6 +66,7 @@ namespace Enemy
             {
                 Debug.Log("Enemy attacks target!");
                 lastAttackTime = Time.time;
+                view.PlayAttackAnimation();
             }
         }
 
@@ -70,7 +97,13 @@ namespace Enemy
             view.PlayHitEffect();
 
             if (model.CurrentHealth <= 0)
-                view.Die();
+                view.PlayDeathAnimation();
+        }
+
+        public override void OnDestroy()
+        {
+            if (IsClient)
+                NetworkDirection.OnValueChanged -= OnDirectionChanged;
         }
     }
 }
