@@ -56,6 +56,11 @@ namespace Player
             SubmitMovementServerRpc(model.MoveInput, lookDir);
         }
 
+        public PlayerView GetView()
+        {
+            return view;
+        }
+
         [ServerRpc]
         private void SubmitMovementServerRpc(Vector2 input, Vector2 lookDir)
         {

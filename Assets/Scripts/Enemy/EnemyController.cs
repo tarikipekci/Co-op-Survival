@@ -1,3 +1,4 @@
+using Player;
 using UnityEngine;
 using Unity.Netcode;
 using UnityEngine.AI;
@@ -45,7 +46,7 @@ namespace Enemy
 
         public void Move(Vector2 direction)
         {
-            model.target = FindClosestPlayer();
+            model.target = FindClosestPlayerController().transform;
             agent.SetDestination(model.target.position);
 
             //Server updates the value
@@ -57,23 +58,36 @@ namespace Enemy
             view.PlayWalkAnimation(current);
         }
 
-        public void TryAttack(Transform target)
+        public void TryAttack(Transform target, PlayerController playerController)
         {
+            if (!IsServer) return; 
+
             if (Time.time - lastAttackTime < model.AttackCooldown) return;
 
             float dist = Vector2.Distance(transform.position, target.position);
-            if (dist <= 1.5f)
+            if (dist <= 1f)
             {
-                Debug.Log("Enemy attacks target!");
                 lastAttackTime = Time.time;
-                view.PlayAttackAnimation();
+
+                PlayAttackAnimationClientRpc();
+
+                //playerController.TakeDamage(model.AttackDamage);
+
+                playerController.GetView().PlayHitEffectClientRpc();
             }
         }
 
-        public Transform FindClosestPlayer()
+        [ClientRpc]
+        private void PlayAttackAnimationClientRpc()
+        {
+            view.PlayAttackAnimation();
+        }
+
+
+        public PlayerController FindClosestPlayerController()
         {
             float minDist = float.MaxValue;
-            Transform closest = null;
+            PlayerController closestController = null;
 
             foreach (var client in NetworkManager.Singleton.ConnectedClientsList)
             {
@@ -84,12 +98,13 @@ namespace Enemy
                 if (dist < minDist)
                 {
                     minDist = dist;
-                    closest = obj.transform;
+                    closestController = obj.GetComponent<PlayerController>();
                 }
             }
 
-            return closest;
+            return closestController;
         }
+
 
         public void TakeDamage(float amount)
         {

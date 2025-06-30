@@ -1,3 +1,4 @@
+using Unity.Netcode;
 using UnityEngine;
 
 namespace Player
@@ -7,6 +8,7 @@ namespace Player
         private static readonly int MoveX = Animator.StringToHash("MoveX");
         private static readonly int MoveY = Animator.StringToHash("MoveY");
         private static readonly int Speed = Animator.StringToHash("Speed");
+        private static readonly int Hit = Animator.StringToHash("Hit");
 
         [SerializeField] private Animator animator;
         private SpriteRenderer spriteRenderer;
@@ -41,6 +43,20 @@ namespace Player
                     animator.SetFloat(Speed, 0);
                 }
             }
+        }
+
+        private void PlayHitEffect()
+        {
+            if (animator != null)
+            {
+                animator.SetTrigger(Hit);
+            }
+        }
+
+        [ClientRpc]
+        public void PlayHitEffectClientRpc()
+        {
+            PlayHitEffect();
         }
     }
 }
