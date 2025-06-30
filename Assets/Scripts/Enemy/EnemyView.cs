@@ -35,7 +35,7 @@ namespace Enemy
             animator.SetFloat(MoveX, Mathf.Abs(direction.x));
             animator.SetFloat(MoveY, direction.y);
             animator.SetFloat(Speed, direction.sqrMagnitude);
-            Debug.Log(direction);
+            //Debug.Log(direction);
             if (direction.x != 0)
                 spriteRenderer.flipX = direction.x > 0;
         }

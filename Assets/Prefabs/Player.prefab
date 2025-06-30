@@ -327,6 +327,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
+  LookDirection:
+    m_InternalValue: {x: 0, y: 0}
+  cameraPrefab: {fileID: 4839199950857426249, guid: 8439a824c8ea4114085e5bb17211d4bb, type: 3}
 --- !u!114 &1276533809324958832
 MonoBehaviour:
   m_ObjectHideFlags: 0
