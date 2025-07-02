@@ -137,7 +137,7 @@ BoxCollider2D:
   m_Enabled: 1
   serializedVersion: 3
   m_Density: 1
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: f5e1147b3068b124f852c7faebb567d7, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -250,6 +250,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
+  NetworkDirection:
+    m_InternalValue: {x: 0, y: 0}
 --- !u!114 &2484095354768690677
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -327,7 +329,7 @@ Rigidbody2D:
   m_LinearDamping: 0
   m_AngularDamping: 0.05
   m_GravityScale: 0
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: f5e1147b3068b124f852c7faebb567d7, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0

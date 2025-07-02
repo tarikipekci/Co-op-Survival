@@ -1,4 +1,4 @@
-using CameraBehavior;
+using Manager;
 using UnityEngine;
 using Unity.Netcode;
 
@@ -27,12 +27,8 @@ namespace Player
         {
             if (IsOwner)
             {
-                GameObject cam = Instantiate(cameraPrefab);
-                if (cam.TryGetComponent(out CameraBehaviour cameraFollow))
-                {
-                    cameraFollow.Follow(transform);
-                    _camera = cam.GetComponent<Camera>();
-                }
+               GameManager.Instance.AssignCameraToPlayer(transform);
+               _camera = GameManager.Instance.GetCamera();
             }
         }
 

@@ -70,6 +70,8 @@ namespace Enemy
                 lastAttackTime = Time.time;
 
                 PlayAttackAnimationClientRpc();
+                
+                playerController.GetComponent<PlayerHealth>().TakeDamageServerRpc(1);
 
                 //playerController.TakeDamage(model.AttackDamage);
 
@@ -104,17 +106,7 @@ namespace Enemy
 
             return closestController;
         }
-
-
-        public void TakeDamage(float amount)
-        {
-            model.CurrentHealth -= amount;
-            view.PlayHitEffect();
-
-            if (model.CurrentHealth <= 0)
-                view.PlayDeathAnimation();
-        }
-
+        
         public override void OnDestroy()
         {
             if (IsClient)
