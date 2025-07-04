@@ -1,4 +1,6 @@
-namespace Enemy
+using Enemy;
+
+namespace Interface
 {
     public interface IEnemyBehavior
     {
