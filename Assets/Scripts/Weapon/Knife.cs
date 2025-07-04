@@ -7,6 +7,8 @@ namespace Weapon
         public override void Attack()
         {
             Debug.Log("Knife Slash!");
+            if (animator != null)
+                animator.SetTrigger(AttackTrigger);
         }
     }
 }

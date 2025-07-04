@@ -7,7 +7,8 @@ namespace Manager
 {
     public class WeaponManager : NetworkBehaviour
     {
-        [SerializeField] private Transform weaponHolder;
+        [SerializeField] public Transform weaponHolderRight;
+        [SerializeField] public Transform weaponHolderLeft;
         [SerializeField] private WeaponData[] availableWeapons;
 
         private WeaponBehaviour currentWeapon;
@@ -55,8 +56,13 @@ namespace Manager
             if (currentWeapon != null)
                 Destroy(currentWeapon.gameObject);
 
-            GameObject weaponInstance = Instantiate(availableWeapons[index].weaponPrefab, weaponHolder);
+            GameObject weaponInstance = Instantiate(availableWeapons[index].weaponPrefab, weaponHolderRight);
             currentWeapon = weaponInstance.GetComponent<WeaponBehaviour>();
+        }
+
+        public WeaponBehaviour GetCurrentWeapon()
+        {
+            return currentWeapon;
         }
     }
 }

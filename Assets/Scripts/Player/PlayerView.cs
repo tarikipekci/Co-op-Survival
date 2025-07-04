@@ -1,3 +1,4 @@
+using Manager;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -13,12 +14,13 @@ namespace Player
         [SerializeField] private Animator animator;
         private SpriteRenderer spriteRenderer;
         private Rigidbody2D rb;
-        private Camera _camera;
+        private WeaponManager weaponManager;
 
         private void Awake()
         {
             spriteRenderer = GetComponentInChildren<SpriteRenderer>();
             rb = GetComponent<Rigidbody2D>();
+            weaponManager = GetComponentInChildren<WeaponManager>();
         }
 
         public void Move(Vector2 direction, float speed, Vector2 lookDir)
@@ -35,12 +37,22 @@ namespace Player
                     animator.SetFloat(MoveX, Mathf.Abs(lookDir.x));
                     animator.SetFloat(MoveY, lookDir.y);
                     animator.SetFloat(Speed, direction.sqrMagnitude);
+
+                    if (lookDir.x < 0)
+                    {
+                        weaponManager.GetCurrentWeapon().UpdateDirection(lookDir, weaponManager.weaponHolderRight);
+                    }
+                    else
+                    {
+                         weaponManager.GetCurrentWeapon().UpdateDirection(lookDir, weaponManager.weaponHolderLeft);
+                    }
                 }
                 else
                 {
                     animator.SetFloat(MoveX, 0);
                     animator.SetFloat(MoveY, 0);
                     animator.SetFloat(Speed, 0);
+                    weaponManager.GetCurrentWeapon().UpdateDirection(Vector2.zero, weaponManager.weaponHolderRight);
                 }
             }
         }
