@@ -62,6 +62,11 @@ namespace Player
             return maxHealth;
         }
 
+        public void IncreaseCurrentHealth(int amount)
+        {
+            currentHealth.Value = Mathf.Clamp(currentHealth.Value + amount, 0, maxHealth);
+        }
+
         public void FullHealth()
         {
             currentHealth.Value = maxHealth;

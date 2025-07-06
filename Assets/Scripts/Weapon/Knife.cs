@@ -1,4 +1,5 @@
 using Enemy;
+using Interface;
 using UnityEngine;
 
 namespace Weapon
@@ -17,6 +18,11 @@ namespace Weapon
                 if (enemyHealth != null)
                 {
                     enemyHealth.TakeDamageServerRpc(weaponData.Damage);
+                }
+                else
+                {
+                    hit.TryGetComponent<ICanTakeDamage>(out var damageable);
+                    damageable?.TakeDamage(weaponData.Damage);
                 }
             }
         }
