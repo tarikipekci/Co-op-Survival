@@ -1,6 +1,6 @@
 using Manager;
-using UnityEngine;
 using Unity.Netcode;
+using UnityEngine;
 
 namespace Player
 {
@@ -9,11 +9,9 @@ namespace Player
     {
         private PlayerModel model;
         private PlayerView view;
-
         private Camera _camera;
 
-        public NetworkVariable<Vector2> LookDirection = new NetworkVariable<Vector2>(
-            writePerm: NetworkVariableWritePermission.Owner);
+        public NetworkVariable<Vector2> LookDirection = new(writePerm: NetworkVariableWritePermission.Owner);
 
         [SerializeField] private GameObject cameraPrefab;
 
@@ -27,14 +25,14 @@ namespace Player
         {
             if (IsOwner)
             {
-               GameManager.Instance.AssignCameraToPlayer(transform);
-               _camera = GameManager.Instance.GetCamera();
+                GameManager.Instance.AssignCameraToPlayer(transform);
+                _camera = GameManager.Instance.GetCamera();
             }
         }
 
         private void FixedUpdate()
         {
-            if (!IsOwner) return;
+            if (!IsOwner || _camera == null) return;
 
             model.MoveInput = new Vector2(
                 Input.GetAxisRaw("Horizontal"),
@@ -52,16 +50,10 @@ namespace Player
             SubmitMovementServerRpc(model.MoveInput, lookDir);
         }
 
-        public PlayerView GetView()
-        {
-            return view;
-        }
-
         [ServerRpc]
         private void SubmitMovementServerRpc(Vector2 input, Vector2 lookDir)
         {
             model.MoveInput = input;
-
             BroadcastMovementClientRpc(input, lookDir);
         }
 
@@ -69,8 +61,12 @@ namespace Player
         private void BroadcastMovementClientRpc(Vector2 input, Vector2 lookDir)
         {
             if (IsOwner) return;
-
             view.Move(input, model.MoveSpeed, lookDir);
+        }
+
+        public PlayerView GetView()
+        {
+            return view;
         }
     }
 }

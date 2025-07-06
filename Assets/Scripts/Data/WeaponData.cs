@@ -8,5 +8,6 @@ namespace Data
         public string weaponName;
         public Sprite icon;
         public GameObject weaponPrefab;
+        public int Damage;
     }
 }

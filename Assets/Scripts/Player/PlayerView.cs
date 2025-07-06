@@ -32,27 +32,23 @@ namespace Player
 
             if (animator != null)
             {
+                var weapon = weaponManager.GetCurrentWeapon();
                 if (rb.linearVelocity.sqrMagnitude > 0.1f)
                 {
                     animator.SetFloat(MoveX, Mathf.Abs(lookDir.x));
                     animator.SetFloat(MoveY, lookDir.y);
                     animator.SetFloat(Speed, direction.sqrMagnitude);
 
-                    if (lookDir.x < 0)
-                    {
-                        weaponManager.GetCurrentWeapon().UpdateDirection(lookDir, weaponManager.weaponHolderRight);
-                    }
-                    else
-                    {
-                         weaponManager.GetCurrentWeapon().UpdateDirection(lookDir, weaponManager.weaponHolderLeft);
-                    }
+                    if (weapon != null)
+                        weapon.UpdateDirection(lookDir);
                 }
                 else
                 {
                     animator.SetFloat(MoveX, 0);
                     animator.SetFloat(MoveY, 0);
                     animator.SetFloat(Speed, 0);
-                    weaponManager.GetCurrentWeapon().UpdateDirection(Vector2.zero, weaponManager.weaponHolderRight);
+                    if (weapon != null)
+                        weapon.UpdateDirection(Vector2.zero);
                 }
             }
         }

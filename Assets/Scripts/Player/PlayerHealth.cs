@@ -19,14 +19,12 @@ namespace Player
 
         public int CurrentHealth => currentHealth.Value;
 
-        private void Start()
-        {
-            currentHealth.Value = maxHealth;
-        }
-
         public override void OnNetworkSpawn()
         {
             currentHealth.OnValueChanged += OnHealthValueChanged;
+
+            if (IsServer)
+                currentHealth.Value = maxHealth;
 
             if (IsOwner)
                 UIManager.Instance?.RegisterPlayerHealth(this);
@@ -34,7 +32,6 @@ namespace Player
 
         private void OnHealthValueChanged(int oldValue, int newValue)
         {
-            Debug.Log($"Health changed: {oldValue} -> {newValue}");
             OnHealthChanged?.Invoke(newValue);
 
             if (IsServer && newValue <= 0)

@@ -15,3 +15,4 @@ MonoBehaviour:
   weaponName: Pistol
   icon: {fileID: 3111778396487290350, guid: 9c1323f2146702e409019df02c2eb18f, type: 3}
   weaponPrefab: {fileID: 4635315944903817134, guid: 25f12678c7a9bc14187336311e8827ba, type: 3}
+  Damage: 1

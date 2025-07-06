@@ -1,4 +1,3 @@
-using Unity.Netcode;
 using UnityEngine;
 
 namespace Enemy
@@ -8,28 +7,19 @@ namespace Enemy
         private static readonly int MoveX = Animator.StringToHash("MoveX");
         private static readonly int MoveY = Animator.StringToHash("MoveY");
         private static readonly int Speed = Animator.StringToHash("Speed");
-        private static readonly int Attack = Animator.StringToHash("Attack");
-        private static readonly int Die1 = Animator.StringToHash("Die");
+        private static readonly int Hit = Animator.StringToHash("Hit");
+        private static readonly int Die = Animator.StringToHash("Die");
 
-        public Rigidbody2D rb;
         public SpriteRenderer spriteRenderer;
+        [SerializeField] private GameObject bloodEffect;
 
         [SerializeField] private Animator animator;
 
-        private void Awake()
-        {
-            rb = GetComponent<Rigidbody2D>();
-        }
-
         public void PlayHitEffect()
         {
+            animator.SetTrigger(Hit);
         }
 
-        public void Die()
-        {
-            Destroy(gameObject);
-        }
-        
         public void PlayWalkAnimation(Vector2 direction)
         {
             animator.SetFloat(MoveX, Mathf.Abs(direction.x));
@@ -44,10 +34,12 @@ namespace Enemy
         {
             //animator.SetTrigger(Attack);
         }
-
+        
         public void PlayDeathAnimation()
         {
-            //animator.SetTrigger(Die1);
+            animator.SetTrigger(Die);
+            var blood = Instantiate(bloodEffect, transform.position, Quaternion.identity);
+            Destroy(blood, 1f);
         }
     }
 }

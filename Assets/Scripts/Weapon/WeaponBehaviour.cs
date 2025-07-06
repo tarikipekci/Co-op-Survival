@@ -1,17 +1,19 @@
 using Data;
 using Interface;
+using Unity.Netcode;
 using UnityEngine;
 
 namespace Weapon
 {
-    public abstract class WeaponBehaviour : MonoBehaviour, IWeapon
+    public class WeaponBehaviour : NetworkBehaviour, IWeapon
     {
         [SerializeField] protected WeaponData weaponData;
-        protected Animator animator;
-        protected static readonly int AttackTrigger = Animator.StringToHash("Attack");
+        private Animator animator;
+
+        private static readonly int AttackTrigger = Animator.StringToHash("Attack");
 
         private SpriteRenderer spriteRenderer;
-
+        
         private void Awake()
         {
             spriteRenderer = GetComponentInChildren<SpriteRenderer>();
@@ -20,27 +22,35 @@ namespace Weapon
 
         public virtual void Attack()
         {
-            Debug.Log("Base attack");
-        }
-
-        public void UpdateDirection(Vector2 lookDir, Transform WeaponPoint)
-        {
-            if (lookDir.sqrMagnitude < 0.01f)
-                return;
-
-            float angle = Mathf.Atan2(lookDir.y, lookDir.x) * Mathf.Rad2Deg;
-            transform.rotation = Quaternion.Euler(0, 0, angle);
-
-            if (lookDir.x < 0)
+            if (IsServer)
             {
-                spriteRenderer.flipY = true;
+                PlayAttackAnimationClientRpc();
             }
             else
             {
-                spriteRenderer.flipY = false;
+                PlayAttackAnimationServerRpc();
             }
+        }
 
-            transform.position = WeaponPoint.position;
+        public void UpdateDirection(Vector2 lookDir)
+        {
+            if (lookDir.sqrMagnitude < 0.01f) return;
+
+            float angle = Mathf.Atan2(lookDir.y, lookDir.x) * Mathf.Rad2Deg;
+            transform.rotation = Quaternion.Euler(0, 0, angle);
+            spriteRenderer.flipY = lookDir.x < 0;
+        }
+
+        [ServerRpc(RequireOwnership = false)]
+        private void PlayAttackAnimationServerRpc()
+        {
+            PlayAttackAnimationClientRpc();
+        }
+
+        [ClientRpc]
+        private void PlayAttackAnimationClientRpc()
+        {
+            animator?.SetTrigger(AttackTrigger);
         }
 
         public Sprite GetIcon() => weaponData.icon;

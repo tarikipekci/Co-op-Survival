@@ -14,4 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   weaponName: Knife
   icon: {fileID: 3421673546711189625, guid: 4af62ce60b8142e49995548830770f42, type: 3}
-  weaponPrefab: {fileID: 4635315944903817134, guid: 3fdcc796b286e074d9ef3f898dc7e8c6, type: 3}
+  weaponPrefab: {fileID: 4635315944903817134, guid: a40390bc3067ccd4389fc6720bdff02c, type: 3}
+  Damage: 2

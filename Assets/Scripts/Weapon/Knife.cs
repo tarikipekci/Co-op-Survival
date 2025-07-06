@@ -1,3 +1,4 @@
+using Enemy;
 using UnityEngine;
 
 namespace Weapon
@@ -6,9 +7,18 @@ namespace Weapon
     {
         public override void Attack()
         {
+            base.Attack();
             Debug.Log("Knife Slash!");
-            if (animator != null)
-                animator.SetTrigger(AttackTrigger);
+
+            Collider2D[] hits = Physics2D.OverlapCircleAll(transform.position,1.0f);
+            foreach (var hit in hits)
+            {
+                EnemyHealth enemyHealth = hit.GetComponentInParent<EnemyHealth>();
+                if (enemyHealth != null)
+                {
+                    enemyHealth.TakeDamageServerRpc(weaponData.Damage);
+                }
+            }
         }
     }
 }

@@ -66,7 +66,7 @@ namespace Enemy
             if (Time.time - lastAttackTime < model.AttackCooldown) return;
 
             float dist = Vector2.Distance(transform.position, target.position);
-            if (dist <= 1f)
+            if (dist <= 0.6f)
             {
                 lastAttackTime = Time.time;
 

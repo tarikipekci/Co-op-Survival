@@ -1,16 +1,10 @@
 fileFormatVersion: 2
-guid: 92c5726853ed5134e8b3368906fc387c
+guid: 86eb02f11a0326e4b936beead5ca1788
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -2762377470491756066
-    second: Zombie-Tileset---_0380_Capa-381_0
-  - first:
-      213: -8460345017239192683
-    second: Zombie-Tileset---_0380_Capa-381_1
-  - first:
-      213: 898993901821579148
-    second: Zombie-Tileset---_0380_Capa-381_2
+      213: 3866836351812484193
+    second: Zombie-Tileset---_0375_Capa-378_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -119,35 +113,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Zombie-Tileset---_0380_Capa-381_0
+      name: Zombie-Tileset---_0375_Capa-378_0
       rect:
         serializedVersion: 2
-        x: 0
-        y: 7
-        width: 7
-        height: 7
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: ed9fbc783501aa9d0800000000000000
-      internalID: -2762377470491756066
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Zombie-Tileset---_0380_Capa-381_1
-      rect:
-        serializedVersion: 2
-        x: 0
+        x: 3
         y: 0
-        width: 14
-        height: 8
+        width: 13
+        height: 18
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -156,30 +128,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 59b363a1801d69a80800000000000000
-      internalID: -8460345017239192683
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Zombie-Tileset---_0380_Capa-381_2
-      rect:
-        serializedVersion: 2
-        x: 8
-        y: 8
-        width: 6
-        height: 6
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: c8f415dc03ed97c00800000000000000
-      internalID: 898993901821579148
+      spriteID: 16cb952bc23c9a530800000000000000
+      internalID: 3866836351812484193
       vertices: []
       indices: 
       edges: []
@@ -198,9 +148,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      Zombie-Tileset---_0380_Capa-381_0: -2762377470491756066
-      Zombie-Tileset---_0380_Capa-381_1: -8460345017239192683
-      Zombie-Tileset---_0380_Capa-381_2: 898993901821579148
+      Zombie-Tileset---_0375_Capa-378_0: 3866836351812484193
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
