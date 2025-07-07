@@ -3,12 +3,14 @@ using Unity.Netcode;
 using UnityEngine;
 using Weapon;
 using System.Collections;
+using UnityEngine.Serialization;
 
 namespace Manager
 {
     public class WeaponManager : NetworkBehaviour
     {
-        [SerializeField] private Transform weaponHolder;
+        [FormerlySerializedAs("weaponHolder")] [SerializeField] public Transform weaponHolderRight;
+        [SerializeField] public Transform weaponHolderLeft;
         [SerializeField] private WeaponData[] availableWeapons;
 
         private WeaponBehaviour currentWeapon;
@@ -76,7 +78,7 @@ namespace Manager
                 availableWeapons[index]?.weaponPrefab == null)
                 return;
 
-            if (weaponHolder == null)
+            if (weaponHolderRight == null)
             {
                 Debug.LogError("WeaponHolder is not assigned!");
                 return;
@@ -98,13 +100,13 @@ namespace Manager
 
             GameObject weaponInstance = Instantiate(
                 availableWeapons[index].weaponPrefab,
-                weaponHolder.position,
-                weaponHolder.rotation
+                weaponHolderRight.position,
+                weaponHolderRight.rotation
             );
 
             NetworkObject networkObject = weaponInstance.GetComponent<NetworkObject>();
             WeaponBehaviour weaponBehaviour = weaponInstance.GetComponent<WeaponBehaviour>();
-
+            
             if (networkObject.IsSceneObject != null &&
                 (networkObject == null || weaponBehaviour == null || (bool)networkObject.IsSceneObject))
             {
@@ -137,7 +139,7 @@ namespace Manager
                 if (weapon != null)
                 {
                     currentWeapon = weapon;
-                    netObj.transform.position = weaponHolder.position;
+                    netObj.transform.position = weaponHolderRight.position;
                     netObj.transform.SetParent(transform);
                 }
             }

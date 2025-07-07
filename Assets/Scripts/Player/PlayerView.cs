@@ -33,6 +33,7 @@ namespace Player
             if (animator != null)
             {
                 var weapon = weaponManager.GetCurrentWeapon();
+                ulong weaponManagerId = weaponManager.NetworkObject.NetworkObjectId;
                 if (rb.linearVelocity.sqrMagnitude > 0.1f)
                 {
                     animator.SetFloat(MoveX, Mathf.Abs(lookDir.x));
@@ -40,7 +41,7 @@ namespace Player
                     animator.SetFloat(Speed, direction.sqrMagnitude);
 
                     if (weapon != null)
-                        weapon.UpdateDirection(lookDir);
+                        weapon.SetLookDirection(lookDir, weaponManagerId);
                 }
                 else
                 {
@@ -48,7 +49,7 @@ namespace Player
                     animator.SetFloat(MoveY, 0);
                     animator.SetFloat(Speed, 0);
                     if (weapon != null)
-                        weapon.UpdateDirection(Vector2.zero);
+                        weapon.SetLookDirection(Vector2.zero, weaponManagerId);
                 }
             }
         }
