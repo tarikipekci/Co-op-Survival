@@ -8,6 +8,7 @@ namespace Environment
     public class PickupItem : NetworkBehaviour
     {
         [SerializeField] private float lifetime = 10f;
+        private bool applyResult;
 
         private void Start()
         {
@@ -26,14 +27,12 @@ namespace Environment
                 Debug.Log("player entered");
                 if (TryGetComponent<IPickupEffect>(out var effect))
                 {
-                    effect.Apply(other.gameObject);
+                    applyResult = effect.Apply(other.gameObject);
                     Debug.Log("Picked up effect");
                 }
 
-                if (NetworkObject.IsSpawned)
+                if (NetworkObject.IsSpawned && applyResult)
                     NetworkObject.Despawn();
-                else
-                    Destroy(gameObject);
             }
         }
 
@@ -41,8 +40,6 @@ namespace Environment
         {
             if (NetworkObject.IsSpawned)
                 NetworkObject.Despawn();
-            else
-                Destroy(gameObject);
         }
     }
 }

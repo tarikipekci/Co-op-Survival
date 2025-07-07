@@ -21,13 +21,25 @@ namespace Environment
 
         public void TakeDamage(int amount)
         {
-            if (!IsServer) return;
-            currentHealth -= amount;
-
-            if (currentHealth <= 0)
+            if (IsServer)
             {
-                Die();
+                currentHealth -= amount;
+
+                if (currentHealth <= 0)
+                {
+                    Die();
+                }
             }
+            else
+            {
+                TakeDamageServerRpc(amount);
+            }
+        }
+
+        [ServerRpc(RequireOwnership = false)]
+        private void TakeDamageServerRpc(int amount)
+        {
+            TakeDamage(amount);
         }
 
         private void Die()

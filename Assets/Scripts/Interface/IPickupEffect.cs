@@ -4,6 +4,6 @@ namespace Interface
 {
     public interface IPickupEffect
     {
-        void Apply(GameObject player);
+        bool Apply(GameObject player);
     }
 }
