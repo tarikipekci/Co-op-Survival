@@ -10,7 +10,9 @@ namespace Weapon
 
         public override void Attack()
         {
+            if (!IsCooldownOver()) return;
             base.Attack();
+            lastAttackTime = Time.time;
             
             Vector2 direction = transform.right;
             ShootServerRpc(firePoint.position, direction);

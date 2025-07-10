@@ -485,3 +485,4 @@ MonoBehaviour:
   availableWeapons:
   - {fileID: 11400000, guid: 4f275474aec7a994d8ae54b0a5967254, type: 2}
   - {fileID: 11400000, guid: 47026a4f5d6401e49a9554653074aa50, type: 2}
+  - {fileID: 11400000, guid: 32dc25ffb5d89434d9c6c52d2f950971, type: 2}

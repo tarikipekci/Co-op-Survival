@@ -8,7 +8,9 @@ namespace Weapon
     {
         public override void Attack()
         {
+            if (!IsCooldownOver()) return;
             base.Attack();
+            lastAttackTime = Time.time;
             Debug.Log("Knife Slash!");
 
             Collider2D[] hits = Physics2D.OverlapCircleAll(transform.position,1.0f);

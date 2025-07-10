@@ -9,5 +9,6 @@ namespace Data
         public Sprite icon;
         public GameObject weaponPrefab;
         public int Damage;
+        public float coolDown;
     }
 }

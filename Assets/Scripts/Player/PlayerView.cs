@@ -39,18 +39,16 @@ namespace Player
                     animator.SetFloat(MoveX, Mathf.Abs(lookDir.x));
                     animator.SetFloat(MoveY, lookDir.y);
                     animator.SetFloat(Speed, direction.sqrMagnitude);
-
-                    if (weapon != null)
-                        weapon.SetLookDirection(lookDir, weaponManagerId);
                 }
                 else
                 {
                     animator.SetFloat(MoveX, 0);
                     animator.SetFloat(MoveY, 0);
                     animator.SetFloat(Speed, 0);
-                    if (weapon != null)
-                        weapon.SetLookDirection(Vector2.zero, weaponManagerId);
                 }
+
+                if (weapon != null)
+                    weapon.SetLookDirection(lookDir, weaponManagerId);
             }
         }
 

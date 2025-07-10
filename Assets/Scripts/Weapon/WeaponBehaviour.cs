@@ -15,6 +15,7 @@ namespace Weapon
 
         private SpriteRenderer spriteRenderer;
         private Vector2 lastLookDir;
+        protected float lastAttackTime;
 
         private void Awake()
         {
@@ -32,6 +33,11 @@ namespace Weapon
             {
                 PlayAttackAnimationServerRpc();
             }
+        }
+
+        protected bool IsCooldownOver()
+        {
+            return Time.time >= lastAttackTime + weaponData.coolDown;
         }
 
         public void SetLookDirection(Vector2 lookDir, ulong weaponManagerId)

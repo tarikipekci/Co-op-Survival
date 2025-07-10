@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ce3393f41624a6149bfec7dc7d802468, type: 3}
-  m_Name: Knife
+  m_Name: Shotgun
   m_EditorClassIdentifier: 
-  weaponName: Knife
-  icon: {fileID: 3421673546711189625, guid: 4af62ce60b8142e49995548830770f42, type: 3}
-  weaponPrefab: {fileID: 4635315944903817134, guid: a40390bc3067ccd4389fc6720bdff02c, type: 3}
-  Damage: 2
-  coolDown: 1
+  weaponName: Shotgun
+  icon: {fileID: -6971013411626743141, guid: 7976a5ba76754784894d26df6092eb27, type: 3}
+  weaponPrefab: {fileID: 8714887861823231327, guid: 02ac7d837ad47de4d827977173aa06c8, type: 3}
+  Damage: 5
+  coolDown: 2
