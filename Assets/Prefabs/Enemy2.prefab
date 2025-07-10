@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 9191192016983921420}
   - component: {fileID: 4334831265846645528}
   - component: {fileID: 8719756683654971994}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: EnemyBody
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -161,7 +161,7 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0, y: -0.19491577}
+  m_Offset: {x: -0.0007324219, y: 0.0032653809}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
@@ -171,7 +171,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 0.3125, y: 0.11016846}
+  m_Size: {x: 0.40759277, y: 0.33685303}
   m_EdgeRadius: 0
 --- !u!1 &3624296893283097346
 GameObject:
@@ -190,7 +190,7 @@ GameObject:
   - component: {fileID: 2577436705800569937}
   - component: {fileID: 6815941654363203617}
   - component: {fileID: 3450946683990068501}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Enemy2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -403,7 +403,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2224068784962407629}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: EnemyVisual
   m_TagString: Untagged
   m_Icon: {fileID: 0}
