@@ -11,7 +11,8 @@ namespace Weapon
         public int damage;
         private Rigidbody2D rb;
 
-        private NetworkVariable<Vector2> direction = new NetworkVariable<Vector2>(writePerm: NetworkVariableWritePermission.Server);
+        private NetworkVariable<Vector2> direction =
+            new NetworkVariable<Vector2>(writePerm: NetworkVariableWritePermission.Server);
 
         public override void OnNetworkSpawn()
         {
@@ -35,7 +36,7 @@ namespace Weapon
 
         public void Init(Vector2 dir)
         {
-            direction.Value = dir; 
+            direction.Value = dir;
         }
 
         private void OnTriggerEnter2D(Collider2D other)
@@ -47,6 +48,15 @@ namespace Weapon
             {
                 enemyHealth.TakeDamageServerRpc(damage);
             }
+
+            if (NetworkObject.IsSpawned)
+                NetworkObject.Despawn();
+        }
+
+        private void OnCollisionEnter2D(Collision2D other)
+        {
+            if (!IsServer) return;
+            if (other.gameObject.CompareTag("Player") || other.gameObject.CompareTag("Projectile")) return;
 
             if (NetworkObject.IsSpawned)
                 NetworkObject.Despawn();

@@ -41,7 +41,7 @@ namespace Manager
             {
                 Transform spawnPoint = spawnPoints[Random.Range(0, spawnPoints.Length)];
 
-                GameObject enemyInstance = Instantiate(enemyPrefabs[Random.Range(0,2)], spawnPoint.position, Quaternion.identity);
+                GameObject enemyInstance = Instantiate(enemyPrefabs[Random.Range(0,enemyPrefabs.Length)], spawnPoint.position, Quaternion.identity);
                 enemyInstance.GetComponent<NetworkObject>().Spawn();
 
                 var model = new EnemyModel(50, 1.5f, 10, 1.2f); // hp, speed, damage, cooldown
