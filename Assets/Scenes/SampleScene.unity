@@ -482,17 +482,26 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
-  enemyPrefabs:
-  - {fileID: 3624296893283097346, guid: 338bbe4724ee4004480fa6fec9154fb3, type: 3}
-  - {fileID: 3624296893283097346, guid: 67cf67bf2d325934bb4e88fe5ebe91bc, type: 3}
-  - {fileID: 3624296893283097346, guid: 0d44d43ed62334240b9abba95cf029db, type: 3}
+  waves:
+  - startTime: 5
+    baseEnemies:
+    - enemyPrefab: {fileID: 3624296893283097346, guid: 338bbe4724ee4004480fa6fec9154fb3, type: 3}
+      count: 10
+    boss:
+      enemyPrefab: {fileID: 0}
+      count: 0
+  - startTime: 20
+    baseEnemies:
+    - enemyPrefab: {fileID: 3624296893283097346, guid: 338bbe4724ee4004480fa6fec9154fb3, type: 3}
+      count: 20
+    boss:
+      enemyPrefab: {fileID: 0}
+      count: 0
   spawnPoints:
   - {fileID: 1776354706}
   - {fileID: 744900204}
   - {fileID: 217566534}
   - {fileID: 1140744842}
-  waveDelay: 3
-  enemiesPerWave: 2
 --- !u!4 &229134103
 Transform:
   m_ObjectHideFlags: 0

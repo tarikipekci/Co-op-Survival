@@ -1,4 +1,6 @@
 using System.Collections;
+using System.Collections.Generic;
+using Data;
 using Enemy;
 using Unity.Netcode;
 using UnityEngine;
@@ -8,46 +10,85 @@ namespace Manager
 {
     public class WaveManager : NetworkBehaviour
     {
-        [SerializeField] private GameObject[] enemyPrefabs;
+        [SerializeField] private List<WaveData> waves;
         [SerializeField] private Transform[] spawnPoints;
-        [SerializeField] private float waveDelay = 5f;
-        [SerializeField] private int enemiesPerWave = 3;
 
-        private int currentWave;
+        private float timer;
+        private bool[] waveStarted;
 
         public override void OnNetworkSpawn()
         {
-            if (IsServer)
+            if (!IsServer) return;
+
+            waveStarted = new bool[waves.Count];
+            timer = 0f;
+        }
+
+        private void Update()
+        {
+            if (!IsServer) return;
+
+            timer += Time.deltaTime;
+
+            for (int i = 0; i < waves.Count; i++)
             {
-                StartCoroutine(WaveLoop());
+                if (!waveStarted[i] && timer >= waves[i].startTime)
+                {
+                    waveStarted[i] = true;
+                    StartCoroutine(RunWave(waves[i]));
+                    Debug.Log($"[WaveManager] Wave {i + 1} started at {Mathf.FloorToInt(timer)}s");
+                }
             }
         }
 
-        private IEnumerator WaveLoop()
+        private IEnumerator RunWave(WaveData wave)
         {
-            while (true)
+            int playerCount = NetworkManager.Singleton.ConnectedClients.Count;
+            var enemies = wave.GetScaledEnemies(playerCount);
+            var boss = wave.GetScaledBoss(playerCount);
+
+            foreach (var enemy in enemies)
             {
-                yield return new WaitForSeconds(waveDelay);
-                currentWave++;
-                SpawnWave(currentWave);
+                for (int i = 0; i < enemy.count; i++)
+                {
+                    SpawnEnemy(enemy.enemyPrefab);
+                    yield return new WaitForSeconds(0.3f);
+                }
+            }
+
+            if (boss != null)
+            {
+                yield return new WaitForSeconds(3f);
+                for (int i = 0; i < boss.count; i++)
+                {
+                    SpawnEnemy(boss.enemyPrefab);
+                    yield return new WaitForSeconds(0.5f);
+                }
             }
         }
 
-        private void SpawnWave(int waveNumber)
+        private void SpawnEnemy(GameObject prefab)
         {
-            Debug.Log($"Wave {waveNumber} starting!");
+            Transform spawnPoint = spawnPoints[Random.Range(0, spawnPoints.Length)];
+            GameObject enemy = Instantiate(prefab, spawnPoint.position, Quaternion.identity);
 
-            for (int i = 0; i < enemiesPerWave; i++)
+            var netObj = enemy.GetComponent<NetworkObject>();
+            if (netObj != null)
+                netObj.Spawn();
+
+            var model = new EnemyModel(50, 1.5f, 10, 1.2f); 
+            var behavior = new ChasePlayer(); 
+
+            var controller = enemy.GetComponent<EnemyController>();
+            if (controller != null)
             {
-                Transform spawnPoint = spawnPoints[Random.Range(0, spawnPoints.Length)];
+                controller.Initialize(model, behavior);
+            }
 
-                GameObject enemyInstance = Instantiate(enemyPrefabs[Random.Range(0,enemyPrefabs.Length)], spawnPoint.position, Quaternion.identity);
-                enemyInstance.GetComponent<NetworkObject>().Spawn();
-
-                var model = new EnemyModel(50, 1.5f, 10, 1.2f); // hp, speed, damage, cooldown
-                var behavior = new ChasePlayer();
-                enemyInstance.GetComponent<EnemyController>().Initialize(model, behavior);
-                enemyInstance.GetComponent<NavMeshAgent>().enabled = true;
+            var agent = enemy.GetComponent<NavMeshAgent>();
+            if (agent != null)
+            {
+                agent.enabled = true;
             }
         }
     }
