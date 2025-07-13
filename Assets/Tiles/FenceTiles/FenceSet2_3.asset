@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 13312, guid: 0000000000000000e000000000000000, type: 0}
-  m_Name: Zombie-Tileset---_0128_Capa-129_0
+  m_Name: FenceSet2_3
   m_EditorClassIdentifier: 
-  m_Sprite: {fileID: 2942621386002381506, guid: ec1cc1a81269ba545a1409f49c008714, type: 3}
+  m_Sprite: {fileID: -1097157613, guid: e5374fbe4d2676d418e17f9abc70b029, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_Transform:
     e00: 1

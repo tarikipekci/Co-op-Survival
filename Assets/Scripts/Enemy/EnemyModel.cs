@@ -4,20 +4,19 @@ namespace Enemy
 {
     public class EnemyModel
     {
-        public float MaxHealth;
-        public float CurrentHealth;
-        public float MoveSpeed;
-        public float Damage;
-        public float AttackCooldown;
+        public int Health { get; }
+        public float Speed { get; }
+        public int Damage { get; }
+        public float AttackRate { get; }
+        
         public Transform target;
 
-        public EnemyModel(float maxHealth, float speed, float damage, float cooldown)
+        public EnemyModel(int health, float speed, int damage, float attackRate)
         {
-            MaxHealth = maxHealth;
-            CurrentHealth = maxHealth;
-            MoveSpeed = speed;
+            Health = health;
+            Speed = speed;
             Damage = damage;
-            AttackCooldown = cooldown;
+            AttackRate = attackRate;
         }
     }
 }

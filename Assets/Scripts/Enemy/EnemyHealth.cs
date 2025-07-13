@@ -5,18 +5,13 @@ namespace Enemy
 {
     public class EnemyHealth : NetworkBehaviour
     {
-        [SerializeField] private int maxHealth = 3;
+        private int maxHealth;
         private NetworkVariable<int> currentHealth = new NetworkVariable<int>();
 
         private EnemyView enemyView;
 
         public override void OnNetworkSpawn()
         {
-            if (IsServer)
-            {
-                currentHealth.Value = maxHealth;
-            }
-
             enemyView = GetComponent<EnemyView>();
 
             currentHealth.OnValueChanged += (oldVal, newVal) =>
@@ -60,6 +55,12 @@ namespace Enemy
                     Destroy(gameObject);
                 }
             }
+        }
+
+        public void SetMaxHealth(int value)
+        {
+            maxHealth = value;
+            currentHealth.Value = maxHealth;
         }
     }
 }

@@ -76,13 +76,28 @@ namespace Manager
             if (netObj != null)
                 netObj.Spawn();
 
-            var model = new EnemyModel(50, 1.5f, 10, 1.2f); 
+            var data = enemy.GetComponent<EnemyData>();
+            if (data == null || data.stats == null)
+            {
+                Debug.LogError("Enemy prefab does not contain EnemyData or stats is not assigned.");
+                return;
+            }
+
+            var stats = data.stats;
+            var model = new EnemyModel(stats.health, stats.speed, stats.damage, stats.attackRate);
+            
             var behavior = new ChasePlayer(); 
 
             var controller = enemy.GetComponent<EnemyController>();
             if (controller != null)
             {
                 controller.Initialize(model, behavior);
+            }
+
+            var health = enemy.GetComponent<EnemyHealth>();
+            if (health != null)
+            {
+                health.SetMaxHealth(model.Health);
             }
 
             var agent = enemy.GetComponent<NavMeshAgent>();

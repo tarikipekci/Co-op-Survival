@@ -36,6 +36,7 @@ namespace Enemy
             agent = GetComponent<NavMeshAgent>();
             agent.updateRotation = false;
             agent.updateUpAxis = false;
+            agent.speed = model.Speed;
         }
 
         private void FixedUpdate()
@@ -63,7 +64,7 @@ namespace Enemy
         {
             if (!IsServer) return; 
 
-            if (Time.time - lastAttackTime < model.AttackCooldown) return;
+            if (Time.time - lastAttackTime < model.AttackRate) return;
 
             float dist = Vector2.Distance(transform.position, target.position);
             if (dist <= 0.6f)
@@ -72,9 +73,7 @@ namespace Enemy
 
                 PlayAttackAnimationClientRpc();
                 
-                playerController.GetComponent<PlayerHealth>().TakeDamageServerRpc(1);
-
-                //playerController.TakeDamage(model.AttackDamage);
+                playerController.GetComponent<PlayerHealth>().TakeDamageServerRpc(model.Damage);
 
                 playerController.GetView().PlayHitEffectClientRpc();
             }

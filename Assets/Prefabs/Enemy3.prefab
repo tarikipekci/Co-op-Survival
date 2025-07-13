@@ -190,6 +190,7 @@ GameObject:
   - component: {fileID: 2577436705800569937}
   - component: {fileID: 6815941654363203617}
   - component: {fileID: 3450946683990068501}
+  - component: {fileID: 9180889399392080602}
   m_Layer: 3
   m_Name: Enemy3
   m_TagString: Untagged
@@ -393,7 +394,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
-  maxHealth: 10
+--- !u!114 &9180889399392080602
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3624296893283097346}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3efb6fd1e65e7ba46a39dc7c3571ab7a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  stats: {fileID: 11400000, guid: 31b27da8f66872e4aafd11d7db1385c5, type: 2}
 --- !u!1 &5255482552725075551
 GameObject:
   m_ObjectHideFlags: 0
