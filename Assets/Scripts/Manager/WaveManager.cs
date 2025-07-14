@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Data;
 using Enemy;
+using Interface;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.AI;
@@ -11,8 +12,8 @@ namespace Manager
     public class WaveManager : NetworkBehaviour
     {
         [SerializeField] private List<WaveData> waves;
-        [SerializeField] private Transform[] spawnPoints;
-
+        [SerializeField] private Transform[] enemySpawnPoints;
+        
         private float timer;
         private bool[] waveStarted;
 
@@ -69,7 +70,7 @@ namespace Manager
 
         private void SpawnEnemy(GameObject prefab)
         {
-            Transform spawnPoint = spawnPoints[Random.Range(0, spawnPoints.Length)];
+            Transform spawnPoint = enemySpawnPoints[Random.Range(0, enemySpawnPoints.Length)];
             GameObject enemy = Instantiate(prefab, spawnPoint.position, Quaternion.identity);
 
             var netObj = enemy.GetComponent<NetworkObject>();
@@ -85,11 +86,25 @@ namespace Manager
 
             var stats = data.stats;
             var model = new EnemyModel(stats.health, stats.speed, stats.damage, stats.attackRate);
-            
-            var behavior = new ChasePlayer(); 
+
+            IEnemyBehavior behavior;
+
+            if (stats is RangedEnemyStats rangedStats)
+            {
+                behavior = new ChaseAndShoot(rangedStats.projectilePrefab);
+            }
+            else if (stats is MeleeEnemyStats)
+            {
+                behavior = new ChasePlayer();
+            }
+            else
+            {
+                Debug.LogWarning("Unknown enemy type. Defaulting to ChasePlayer.");
+                behavior = new ChasePlayer();
+            }
 
             var controller = enemy.GetComponent<EnemyController>();
-            if (controller != null)
+            if (controller != null && behavior != null)
             {
                 controller.Initialize(model, behavior);
             }

@@ -3,6 +3,7 @@ using Player;
 using UnityEngine;
 using Unity.Netcode;
 using UnityEngine.AI;
+using Weapon;
 
 namespace Enemy
 {
@@ -13,7 +14,6 @@ namespace Enemy
         private EnemyView view;
         private IEnemyBehavior behavior;
         private NavMeshAgent agent;
-
         private float lastAttackTime;
 
         public NetworkVariable<Vector2> NetworkDirection = new NetworkVariable<Vector2>(
@@ -79,13 +79,26 @@ namespace Enemy
             }
         }
 
+        public void ShootProjectile(Vector3 targetPosition, GameObject projectilePrefab,
+            PlayerController playerController)
+        {
+            if (!IsServer) return;
+
+            Vector3 spawnPos = transform.position + (targetPosition - transform.position).normalized * 0.5f;
+            GameObject projectile = Instantiate(projectilePrefab, spawnPos, Quaternion.identity);
+
+            projectile.GetComponent<NetworkObject>().Spawn();
+
+            var dir = (targetPosition - spawnPos).normalized;
+            projectile.GetComponent<Projectile>().Init(dir, ProjectileOwner.Enemy);
+        }
+
         [ClientRpc]
         private void PlayAttackAnimationClientRpc()
         {
             view.PlayAttackAnimation();
         }
-
-
+        
         public PlayerController FindClosestPlayerController()
         {
             float minDist = float.MaxValue;

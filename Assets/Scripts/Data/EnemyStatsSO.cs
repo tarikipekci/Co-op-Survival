@@ -2,7 +2,6 @@ using UnityEngine;
 
 namespace Data
 {
-    [CreateAssetMenu(fileName = "EnemyStats", menuName = "Enemies/Enemy Stats")]
     public class EnemyStatsSO : ScriptableObject
     {
         public int health;

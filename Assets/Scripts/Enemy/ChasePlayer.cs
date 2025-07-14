@@ -6,7 +6,7 @@ namespace Enemy
 {
     public class ChasePlayer : IEnemyBehavior
     {
-        public void Execute(EnemyController controller)
+        public override void Execute(EnemyController controller)
         {
             if (controller == null) return;
 

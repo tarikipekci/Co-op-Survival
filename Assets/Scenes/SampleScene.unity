@@ -333,10 +333,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 1776354706}
-  - {fileID: 744900204}
-  - {fileID: 217566534}
-  - {fileID: 1140744842}
+  - {fileID: 682723137}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &217566533
@@ -350,7 +347,7 @@ GameObject:
   - component: {fileID: 217566534}
   - component: {fileID: 217566535}
   m_Layer: 0
-  m_Name: EnemySpawnPoint - 3
+  m_Name: MeleeEnemySpawnPoint - 3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -369,7 +366,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 161974248}
+  m_Father: {fileID: 682723137}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &217566535
 SpriteRenderer:
@@ -485,23 +482,12 @@ MonoBehaviour:
   waves:
   - startTime: 5
     baseEnemies:
-    - enemyPrefab: {fileID: 3624296893283097346, guid: 338bbe4724ee4004480fa6fec9154fb3, type: 3}
-      count: 10
-    boss:
-      enemyPrefab: {fileID: 0}
-      count: 0
-  - startTime: 20
-    baseEnemies:
-    - enemyPrefab: {fileID: 3624296893283097346, guid: 338bbe4724ee4004480fa6fec9154fb3, type: 3}
-      count: 20
-    - enemyPrefab: {fileID: 3624296893283097346, guid: 67cf67bf2d325934bb4e88fe5ebe91bc, type: 3}
-      count: 10
-    - enemyPrefab: {fileID: 3624296893283097346, guid: 0d44d43ed62334240b9abba95cf029db, type: 3}
+    - enemyPrefab: {fileID: 3624296893283097346, guid: ceab5bfeb5f692a44b1378633e124c64, type: 3}
       count: 5
     boss:
       enemyPrefab: {fileID: 0}
       count: 0
-  spawnPoints:
+  enemySpawnPoints:
   - {fileID: 1776354706}
   - {fileID: 744900204}
   - {fileID: 217566534}
@@ -858,6 +844,41 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &682723136
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 682723137}
+  m_Layer: 0
+  m_Name: AllEnemySpawnPoints
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &682723137
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 682723136}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1776354706}
+  - {fileID: 744900204}
+  - {fileID: 217566534}
+  - {fileID: 1140744842}
+  m_Father: {fileID: 161974248}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &705423486
 GameObject:
@@ -3169,7 +3190,7 @@ GameObject:
   - component: {fileID: 744900204}
   - component: {fileID: 744900205}
   m_Layer: 0
-  m_Name: EnemySpawnPoint - 2
+  m_Name: MeleeEnemySpawnPoint - 2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3188,7 +3209,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 161974248}
+  m_Father: {fileID: 682723137}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &744900205
 SpriteRenderer:
@@ -61689,7 +61710,7 @@ GameObject:
   - component: {fileID: 1140744842}
   - component: {fileID: 1140744843}
   m_Layer: 0
-  m_Name: EnemySpawnPoint - 4
+  m_Name: MeleeEnemySpawnPoint - 4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -61708,7 +61729,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 161974248}
+  m_Father: {fileID: 682723137}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &1140744843
 SpriteRenderer:
@@ -62734,7 +62755,7 @@ GameObject:
   - component: {fileID: 1776354706}
   - component: {fileID: 1776354707}
   m_Layer: 0
-  m_Name: EnemySpawnPoint - 1
+  m_Name: MeleeEnemySpawnPoint - 1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -62753,7 +62774,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 161974248}
+  m_Father: {fileID: 682723137}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &1776354707
 SpriteRenderer:

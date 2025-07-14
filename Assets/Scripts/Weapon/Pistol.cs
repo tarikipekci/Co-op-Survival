@@ -29,7 +29,7 @@ namespace Weapon
             {
                 projectile.damage = weaponData.Damage;
                 netObj.Spawn(true);
-                projectile.Init(direction);
+                projectile.Init(direction, ProjectileOwner.Player);
             }
             else
             {

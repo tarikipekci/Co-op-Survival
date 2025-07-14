@@ -7,8 +7,9 @@ namespace Enemy
         public int Health { get; }
         public float Speed { get; }
         public int Damage { get; }
-        public float AttackRate { get; }
         
+        public float AttackRate { get; }
+
         public Transform target;
 
         public EnemyModel(int health, float speed, int damage, float attackRate)

@@ -132,6 +132,7 @@ MonoBehaviour:
   speed: 10
   lifetime: 2
   damage: 1
+  owner: 0
 --- !u!50 &6960466651682702035
 Rigidbody2D:
   serializedVersion: 5

@@ -2,8 +2,8 @@ using Enemy;
 
 namespace Interface
 {
-    public interface IEnemyBehavior
+    public abstract class IEnemyBehavior
     {
-        void Execute(EnemyController controller);
+        public abstract void Execute(EnemyController controller);
     }
 }
