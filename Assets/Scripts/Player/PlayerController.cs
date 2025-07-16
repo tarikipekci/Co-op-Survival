@@ -45,7 +45,7 @@ namespace Player
 
             LookDirection.Value = lookDir;
 
-            view.Move(model.MoveInput, model.MoveSpeed, lookDir);
+            view.Move(model.MoveInput, PlayerModel.MoveSpeed, lookDir);
 
             SubmitMovementServerRpc(model.MoveInput, lookDir);
         }
@@ -61,7 +61,7 @@ namespace Player
         private void BroadcastMovementClientRpc(Vector2 input, Vector2 lookDir)
         {
             if (IsOwner) return;
-            view.Move(input, model.MoveSpeed, lookDir);
+            view.Move(input, PlayerModel.MoveSpeed, lookDir);
         }
 
         public PlayerView GetView()

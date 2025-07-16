@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Data;
 using Enemy;
 using Interface;
+using Player;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.AI;
@@ -13,7 +14,8 @@ namespace Manager
     {
         [SerializeField] private List<WaveData> waves;
         [SerializeField] private Transform[] enemySpawnPoints;
-        
+        [SerializeField] private DayNightManager dayNightManager;
+
         private float timer;
         private bool[] waveStarted;
 
@@ -38,8 +40,18 @@ namespace Manager
                     waveStarted[i] = true;
                     StartCoroutine(RunWave(waves[i]));
                     Debug.Log($"[WaveManager] Wave {i + 1} started at {Mathf.FloorToInt(timer)}s");
+
+                    HandleNightTransition(waves[i].isNight);
                 }
             }
+        }
+
+        private void HandleNightTransition(bool isNight)
+        {
+            if (isNight)
+                dayNightManager.SetNight();
+            else
+                dayNightManager.SetDay();
         }
 
         private IEnumerator RunWave(WaveData wave)
@@ -74,8 +86,7 @@ namespace Manager
             GameObject enemy = Instantiate(prefab, spawnPoint.position, Quaternion.identity);
 
             var netObj = enemy.GetComponent<NetworkObject>();
-            if (netObj != null)
-                netObj.Spawn();
+            if (netObj != null) netObj.Spawn();
 
             var data = enemy.GetComponent<EnemyData>();
             if (data == null || data.stats == null)
@@ -93,33 +104,19 @@ namespace Manager
             {
                 behavior = new ChaseAndShoot(rangedStats.projectilePrefab);
             }
-            else if (stats is MeleeEnemyStats)
-            {
-                behavior = new ChasePlayer();
-            }
             else
             {
-                Debug.LogWarning("Unknown enemy type. Defaulting to ChasePlayer.");
                 behavior = new ChasePlayer();
             }
 
             var controller = enemy.GetComponent<EnemyController>();
-            if (controller != null && behavior != null)
-            {
-                controller.Initialize(model, behavior);
-            }
+            controller?.Initialize(model, behavior);
 
             var health = enemy.GetComponent<EnemyHealth>();
-            if (health != null)
-            {
-                health.SetMaxHealth(model.Health);
-            }
+            health?.SetMaxHealth(model.Health);
 
             var agent = enemy.GetComponent<NavMeshAgent>();
-            if (agent != null)
-            {
-                agent.enabled = true;
-            }
+            if (agent != null) agent.enabled = true;
         }
     }
 }

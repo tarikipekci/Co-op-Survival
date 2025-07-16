@@ -15,12 +15,14 @@ namespace Player
         private SpriteRenderer spriteRenderer;
         private Rigidbody2D rb;
         private WeaponManager weaponManager;
+        private PlayerFlashlightController _playerFlashlightController;
 
         private void Awake()
         {
             spriteRenderer = GetComponentInChildren<SpriteRenderer>();
             rb = GetComponent<Rigidbody2D>();
             weaponManager = GetComponentInChildren<WeaponManager>();
+            _playerFlashlightController = GetComponent<PlayerFlashlightController>();
         }
 
         public void Move(Vector2 direction, float speed, Vector2 lookDir)
@@ -49,6 +51,11 @@ namespace Player
 
                 if (weapon != null)
                     weapon.SetLookDirection(lookDir, weaponManagerId);
+
+                if (_playerFlashlightController != null)
+                {
+                    _playerFlashlightController.UpdateLookDirection(lookDir);
+                }
             }
         }
 

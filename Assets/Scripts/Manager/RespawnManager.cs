@@ -22,7 +22,7 @@ namespace Manager
 
         private void HandlePlayerDeath(ulong clientId)
         {
-            StartCoroutine(RespawnAfterDelay(clientId, 5f)); 
+            StartCoroutine(RespawnAfterDelay(clientId, 5f));
         }
 
         private IEnumerator RespawnAfterDelay(ulong clientId, float delay)
@@ -38,8 +38,16 @@ namespace Manager
             Transform spawnPoint = spawnPoints[Random.Range(0, spawnPoints.Length)];
             GameObject playerInstance = Instantiate(playerPrefab, spawnPoint.position, spawnPoint.rotation);
             playerInstance.GetComponent<NetworkObject>().SpawnAsPlayerObject(clientId);
+
             var playerHealth = playerInstance.GetComponent<PlayerHealth>();
             playerHealth.FullHealth();
+
+            var dayNightManager = FindAnyObjectByType<DayNightManager>();
+            if (dayNightManager != null && dayNightManager.IsNight())
+            {
+                var flashlightController = playerInstance.GetComponent<PlayerFlashlightController>();
+                flashlightController?.SpawnFlashlight();
+            }
         }
     }
 }

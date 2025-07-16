@@ -53,6 +53,10 @@ namespace Player
         private IEnumerator DelayedDestroy()
         {
             yield return new WaitForSeconds(0.1f);
+
+            var flashlightController = GetComponent<PlayerFlashlightController>();
+            flashlightController?.RemoveFlashlight();
+
             OnPlayerDied?.Invoke(OwnerClientId);
             NetworkObject.Despawn();
         }

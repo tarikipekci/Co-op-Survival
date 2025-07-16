@@ -8,6 +8,7 @@ namespace Data
     {
         public float startTime; 
         public List<EnemyWaveInfo> baseEnemies;
+        public bool isNight;
         public EnemyWaveInfo boss;
 
         public List<EnemyWaveInfo> GetScaledEnemies(int playerCount)
