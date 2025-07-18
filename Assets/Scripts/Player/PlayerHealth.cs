@@ -10,7 +10,7 @@ namespace Player
     {
         public event Action<int> OnHealthChanged;
 
-        [SerializeField] private int maxHealth = 3;
+        private int maxHealth;
         private NetworkVariable<int> currentHealth = new NetworkVariable<int>();
 
         public delegate void OnDeathHandler(ulong clientId);
@@ -19,12 +19,15 @@ namespace Player
 
         public int CurrentHealth => currentHealth.Value;
 
-        public override void OnNetworkSpawn()
+        public void InitializeHealth(int initialHealth)
         {
             currentHealth.OnValueChanged += OnHealthValueChanged;
 
             if (IsServer)
+            {
+                maxHealth = initialHealth;
                 currentHealth.Value = maxHealth;
+            }
 
             if (IsOwner)
                 UIManager.Instance?.RegisterPlayerHealth(this);

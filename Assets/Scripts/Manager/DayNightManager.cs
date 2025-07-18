@@ -52,9 +52,9 @@ namespace Manager
             {
                 currentTransition = StartCoroutine(TransitionLight(
                     globalLight.intensity,
-                    0.05f,
+                    0.2f,
                     globalLight.color,
-                    new Color(0.1f, 0.1f, 0.2f)
+                    new Color(0.2f, 0.2f, 0.3f)
                 ));
                 SpawnAllFlashlights();
             }

@@ -480,11 +480,149 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
   waves:
-  - startTime: 5
+  - startTime: 0
     baseEnemies:
     - enemyPrefab: {fileID: 3624296893283097346, guid: 338bbe4724ee4004480fa6fec9154fb3, type: 3}
-      count: 10
+      count: 12
+    - enemyPrefab: {fileID: 3624296893283097346, guid: 67cf67bf2d325934bb4e88fe5ebe91bc, type: 3}
+      count: 6
     isNight: 1
+    boss:
+      enemyPrefab: {fileID: 0}
+      count: 0
+  - startTime: 40
+    baseEnemies:
+    - enemyPrefab: {fileID: 3624296893283097346, guid: 338bbe4724ee4004480fa6fec9154fb3, type: 3}
+      count: 18
+    - enemyPrefab: {fileID: 3624296893283097346, guid: 67cf67bf2d325934bb4e88fe5ebe91bc, type: 3}
+      count: 10
+    - enemyPrefab: {fileID: 3624296893283097346, guid: ceab5bfeb5f692a44b1378633e124c64, type: 3}
+      count: 4
+    isNight: 0
+    boss:
+      enemyPrefab: {fileID: 0}
+      count: 0
+  - startTime: 85
+    baseEnemies:
+    - enemyPrefab: {fileID: 3624296893283097346, guid: 338bbe4724ee4004480fa6fec9154fb3, type: 3}
+      count: 25
+    - enemyPrefab: {fileID: 3624296893283097346, guid: 67cf67bf2d325934bb4e88fe5ebe91bc, type: 3}
+      count: 15
+    - enemyPrefab: {fileID: 3624296893283097346, guid: ceab5bfeb5f692a44b1378633e124c64, type: 3}
+      count: 6
+    isNight: 1
+    boss:
+      enemyPrefab: {fileID: 0}
+      count: 0
+  - startTime: 130
+    baseEnemies:
+    - enemyPrefab: {fileID: 3624296893283097346, guid: 338bbe4724ee4004480fa6fec9154fb3, type: 3}
+      count: 30
+    - enemyPrefab: {fileID: 3624296893283097346, guid: 67cf67bf2d325934bb4e88fe5ebe91bc, type: 3}
+      count: 20
+    - enemyPrefab: {fileID: 3624296893283097346, guid: ceab5bfeb5f692a44b1378633e124c64, type: 3}
+      count: 8
+    - enemyPrefab: {fileID: 3624296893283097346, guid: 0d44d43ed62334240b9abba95cf029db, type: 3}
+      count: 4
+    isNight: 0
+    boss:
+      enemyPrefab: {fileID: 0}
+      count: 0
+  - startTime: 180
+    baseEnemies:
+    - enemyPrefab: {fileID: 3624296893283097346, guid: 338bbe4724ee4004480fa6fec9154fb3, type: 3}
+      count: 35
+    - enemyPrefab: {fileID: 3624296893283097346, guid: 67cf67bf2d325934bb4e88fe5ebe91bc, type: 3}
+      count: 25
+    - enemyPrefab: {fileID: 3624296893283097346, guid: ceab5bfeb5f692a44b1378633e124c64, type: 3}
+      count: 10
+    - enemyPrefab: {fileID: 3624296893283097346, guid: 0d44d43ed62334240b9abba95cf029db, type: 3}
+      count: 7
+    isNight: 1
+    boss:
+      enemyPrefab: {fileID: 0}
+      count: 0
+  - startTime: 230
+    baseEnemies:
+    - enemyPrefab: {fileID: 3624296893283097346, guid: 338bbe4724ee4004480fa6fec9154fb3, type: 3}
+      count: 40
+    - enemyPrefab: {fileID: 3624296893283097346, guid: 67cf67bf2d325934bb4e88fe5ebe91bc, type: 3}
+      count: 30
+    - enemyPrefab: {fileID: 3624296893283097346, guid: ceab5bfeb5f692a44b1378633e124c64, type: 3}
+      count: 12
+    - enemyPrefab: {fileID: 3624296893283097346, guid: 0d44d43ed62334240b9abba95cf029db, type: 3}
+      count: 10
+    isNight: 0
+    boss:
+      enemyPrefab: {fileID: 0}
+      count: 0
+  - startTime: 280
+    baseEnemies:
+    - enemyPrefab: {fileID: 3624296893283097346, guid: 338bbe4724ee4004480fa6fec9154fb3, type: 3}
+      count: 45
+    - enemyPrefab: {fileID: 3624296893283097346, guid: 67cf67bf2d325934bb4e88fe5ebe91bc, type: 3}
+      count: 35
+    - enemyPrefab: {fileID: 3624296893283097346, guid: ceab5bfeb5f692a44b1378633e124c64, type: 3}
+      count: 15
+    - enemyPrefab: {fileID: 3624296893283097346, guid: 0d44d43ed62334240b9abba95cf029db, type: 3}
+      count: 12
+    isNight: 1
+    boss:
+      enemyPrefab: {fileID: 0}
+      count: 0
+  - startTime: 335
+    baseEnemies:
+    - enemyPrefab: {fileID: 3624296893283097346, guid: 338bbe4724ee4004480fa6fec9154fb3, type: 3}
+      count: 50
+    - enemyPrefab: {fileID: 3624296893283097346, guid: 67cf67bf2d325934bb4e88fe5ebe91bc, type: 3}
+      count: 40
+    - enemyPrefab: {fileID: 3624296893283097346, guid: ceab5bfeb5f692a44b1378633e124c64, type: 3}
+      count: 18
+    - enemyPrefab: {fileID: 3624296893283097346, guid: 0d44d43ed62334240b9abba95cf029db, type: 3}
+      count: 15
+    isNight: 0
+    boss:
+      enemyPrefab: {fileID: 0}
+      count: 0
+  - startTime: 390
+    baseEnemies:
+    - enemyPrefab: {fileID: 3624296893283097346, guid: 338bbe4724ee4004480fa6fec9154fb3, type: 3}
+      count: 60
+    - enemyPrefab: {fileID: 3624296893283097346, guid: 67cf67bf2d325934bb4e88fe5ebe91bc, type: 3}
+      count: 45
+    - enemyPrefab: {fileID: 3624296893283097346, guid: ceab5bfeb5f692a44b1378633e124c64, type: 3}
+      count: 20
+    - enemyPrefab: {fileID: 3624296893283097346, guid: 0d44d43ed62334240b9abba95cf029db, type: 3}
+      count: 18
+    isNight: 0
+    boss:
+      enemyPrefab: {fileID: 0}
+      count: 0
+  - startTime: 445
+    baseEnemies:
+    - enemyPrefab: {fileID: 3624296893283097346, guid: 338bbe4724ee4004480fa6fec9154fb3, type: 3}
+      count: 70
+    - enemyPrefab: {fileID: 3624296893283097346, guid: 67cf67bf2d325934bb4e88fe5ebe91bc, type: 3}
+      count: 50
+    - enemyPrefab: {fileID: 3624296893283097346, guid: ceab5bfeb5f692a44b1378633e124c64, type: 3}
+      count: 25
+    - enemyPrefab: {fileID: 3624296893283097346, guid: 0d44d43ed62334240b9abba95cf029db, type: 3}
+      count: 20
+    isNight: 0
+    boss:
+      enemyPrefab: {fileID: 0}
+      count: 0
+  - startTime: 505
+    baseEnemies:
+    - enemyPrefab: {fileID: 3624296893283097346, guid: 338bbe4724ee4004480fa6fec9154fb3, type: 3}
+      count: 70
+    - enemyPrefab: {fileID: 3624296893283097346, guid: 67cf67bf2d325934bb4e88fe5ebe91bc, type: 3}
+      count: 50
+    - enemyPrefab: {fileID: 3624296893283097346, guid: ceab5bfeb5f692a44b1378633e124c64, type: 3}
+      count: 25
+    - enemyPrefab: {fileID: 3624296893283097346, guid: 0d44d43ed62334240b9abba95cf029db, type: 3}
+      count: 20
+    isNight: 0
     boss:
       enemyPrefab: {fileID: 0}
       count: 0
@@ -62282,6 +62420,77 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1457287650}
   m_CullTransparentMesh: 1
+--- !u!1 &1498462892
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1498462895}
+  - component: {fileID: 1498462893}
+  - component: {fileID: 1498462894}
+  m_Layer: 0
+  m_Name: PlayerDataManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1498462893
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1498462892}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GlobalObjectIdHash: 2492062968
+  InScenePlacedSourceGlobalObjectIdHash: 0
+  DeferredDespawnTick: 0
+  Ownership: 1
+  AlwaysReplicateAsRoot: 0
+  SynchronizeTransform: 1
+  ActiveSceneSynchronization: 0
+  SceneMigrationSynchronization: 0
+  SpawnWithObservers: 1
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 1
+  SyncOwnerTransformWhenParented: 1
+  AllowOwnerToParent: 0
+--- !u!114 &1498462894
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1498462892}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 76287f1416bd4e147bad6a3cfee748b5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
+--- !u!4 &1498462895
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1498462892}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -3.87649, y: -4.4676, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1536793707
 GameObject:
   m_ObjectHideFlags: 0
@@ -63390,3 +63599,4 @@ SceneRoots:
   - {fileID: 1000318101}
   - {fileID: 1185383822}
   - {fileID: 1103972901}
+  - {fileID: 1498462895}

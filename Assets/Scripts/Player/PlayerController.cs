@@ -10,15 +10,19 @@ namespace Player
         private PlayerModel model;
         private PlayerView view;
         private Camera _camera;
+        private PlayerData playerData;
 
         public NetworkVariable<Vector2> LookDirection = new(writePerm: NetworkVariableWritePermission.Owner);
 
         [SerializeField] private GameObject cameraPrefab;
 
-        private void Awake()
+        public override void OnNetworkSpawn()
         {
-            model = new PlayerModel();
             view = GetComponent<PlayerView>();
+            playerData = PlayerDataManager.Instance.GetOrCreatePlayerData(OwnerClientId);
+            model = new PlayerModel(playerData);
+            var health = GetComponent<PlayerHealth>();
+            health.InitializeHealth(model.MaxHealth);
         }
 
         private void Start()
@@ -45,7 +49,7 @@ namespace Player
 
             LookDirection.Value = lookDir;
 
-            view.Move(model.MoveInput, PlayerModel.MoveSpeed, lookDir);
+            view.Move(model.MoveInput, model.MoveSpeed, lookDir);
 
             SubmitMovementServerRpc(model.MoveInput, lookDir);
         }
@@ -61,7 +65,7 @@ namespace Player
         private void BroadcastMovementClientRpc(Vector2 input, Vector2 lookDir)
         {
             if (IsOwner) return;
-            view.Move(input, PlayerModel.MoveSpeed, lookDir);
+            view.Move(input, model.MoveSpeed, lookDir);
         }
 
         public PlayerView GetView()
