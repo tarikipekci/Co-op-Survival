@@ -15,7 +15,8 @@ namespace Manager
         [SerializeField] private int xpPerLevel = 100;
         [SerializeField] private int requiredXPMultiplier = 100;
 
-        [SerializeField] private GameObject xpPickupPrefab; 
+        [SerializeField] private GameObject xpPickupPrefab;
+        public event System.Action<int> OnLevelUp;
 
         private void Awake()
         {
@@ -44,6 +45,7 @@ namespace Manager
                 Experience.Value -= xpPerLevel;
                 Level.Value++;
                 xpPerLevel = Level.Value * requiredXPMultiplier;
+                OnLevelUp?.Invoke(Level.Value);
             }
         }
 

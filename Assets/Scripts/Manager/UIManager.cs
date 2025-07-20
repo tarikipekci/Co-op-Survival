@@ -14,6 +14,9 @@ namespace Manager
         [SerializeField] private Sprite fullHeart;
         [SerializeField] private Sprite emptyHeart;
 
+        [Header("Upgrade UI")] [SerializeField]
+        private UpgradeUIManager upgradeUIManager;
+
         private PlayerHealth playerHealth;
 
         private void Awake()
@@ -21,10 +24,9 @@ namespace Manager
             if (Instance != null && Instance != this) Destroy(gameObject);
             else Instance = this;
         }
-        
+
         private void UpdateHearts(int currentHealth)
         {
-            Debug.Log($"UpdateHearts called with currentHealth={currentHealth}");
             for (int i = 0; i < heartImages.Length; i++)
             {
                 heartImages[i].sprite = i < currentHealth ? fullHeart : emptyHeart;
@@ -41,6 +43,14 @@ namespace Manager
             UpdateHearts(playerHealth.CurrentHealth);
         }
 
+        public void UnregisterPlayerHealth(PlayerHealth health)
+        {
+            if (playerHealth == health)
+            {
+                playerHealth.OnHealthChanged -= UpdateHearts;
+                playerHealth = null;
+            }
+        }
 
         private void OnDestroy()
         {
@@ -48,14 +58,14 @@ namespace Manager
                 playerHealth.OnHealthChanged -= UpdateHearts;
         }
 
-        public void UnregisterPlayerHealth(PlayerHealth health)
+        public void ShowUpgradeOptions(PlayerData playerData)
         {
-            if (playerHealth == health)
-            {
-                playerHealth.OnHealthChanged -= UpdateHearts;
-                playerHealth = null;
-                // optionally clear UI
-            }
+            upgradeUIManager.ShowUpgradeOptions(playerData);
+        }
+
+        public UpgradeUIManager GetUpgradeUIManager()
+        {
+            return upgradeUIManager;
         }
     }
 }

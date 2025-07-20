@@ -23,6 +23,10 @@ namespace Player
             {
                 Debug.LogError("PlayerView component not found!");
             }
+
+            if (!IsOwner) return;
+
+            XPManager.Instance.OnLevelUp += HandleLevelUp;
         }
 
         private void Start()
@@ -36,7 +40,7 @@ namespace Player
                     Debug.LogError("Camera could not be assigned!");
                 }
             }
-            
+
             playerData = PlayerDataManager.Instance.GetOrCreatePlayerData(OwnerClientId);
             if (playerData == null)
             {
@@ -93,6 +97,24 @@ namespace Player
         public PlayerView GetView()
         {
             return view;
+        }
+
+        private void HandleLevelUp(int newLevel)
+        {
+            UpgradeUIManager upgradeUI = UIManager.Instance.GetUpgradeUIManager();
+            if (upgradeUI != null)
+            {
+                var playerData = PlayerDataManager.Instance.GetOrCreatePlayerData(OwnerClientId);
+                upgradeUI.ShowUpgradeOptions(playerData);
+            }
+        }
+
+        public override void OnNetworkDespawn()
+        {
+            if (IsOwner && XPManager.Instance != null)
+            {
+                XPManager.Instance.OnLevelUp -= HandleLevelUp;
+            }
         }
     }
 }
