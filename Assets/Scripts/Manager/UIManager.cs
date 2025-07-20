@@ -1,6 +1,4 @@
-using System.Collections;
 using Player;
-using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -23,32 +21,7 @@ namespace Manager
             if (Instance != null && Instance != this) Destroy(gameObject);
             else Instance = this;
         }
-
-        private void Start()
-        {
-            StartCoroutine(SetupUI());
-        }
-
-        private IEnumerator SetupUI()
-        {
-            while (NetworkManager.Singleton.LocalClient.PlayerObject == null)
-                yield return null;
-
-            var localPlayer = NetworkManager.Singleton.LocalClient.PlayerObject;
-            playerHealth = localPlayer.GetComponent<PlayerHealth>();
-
-            if (playerHealth == null)
-            {
-                Debug.LogError("PlayerHealth component not found on local player!");
-                yield break;
-            }
-
-            Debug.Log("Subscribing to OnHealthChanged");
-            playerHealth.OnHealthChanged += UpdateHearts;
-
-            UpdateHearts(playerHealth.CurrentHealth);
-        }
-
+        
         private void UpdateHearts(int currentHealth)
         {
             Debug.Log($"UpdateHearts called with currentHealth={currentHealth}");

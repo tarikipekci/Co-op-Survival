@@ -23,20 +23,29 @@ namespace Player
             rb = GetComponent<Rigidbody2D>();
             weaponManager = GetComponentInChildren<WeaponManager>();
             _playerFlashlightController = GetComponent<PlayerFlashlightController>();
+
+            if (spriteRenderer == null) Debug.LogError("SpriteRenderer not found!");
+            if (rb == null) Debug.LogError("Rigidbody2D not found!");
+            if (weaponManager == null) Debug.LogError("WeaponManager not found!");
+            if (_playerFlashlightController == null) Debug.LogError("PlayerFlashlightController not found!");
+            if (animator == null) Debug.LogError("Animator not found!");
         }
 
         public void Move(Vector2 direction, float speed, Vector2 lookDir)
         {
-            rb.linearVelocity = direction * speed;
+            if (rb != null)
+            {
+                rb.linearVelocity = direction * speed;
+            }
 
-            if (Mathf.Abs(lookDir.x) > 0.01f)
+            if (spriteRenderer != null && Mathf.Abs(lookDir.x) > 0.01f)
+            {
                 spriteRenderer.flipX = lookDir.x < 0;
+            }
 
             if (animator != null)
             {
-                var weapon = weaponManager.GetCurrentWeapon();
-                ulong weaponManagerId = weaponManager.NetworkObject.NetworkObjectId;
-                if (rb.linearVelocity.sqrMagnitude > 0.1f)
+                if (rb != null && rb.linearVelocity.sqrMagnitude > 0.1f)
                 {
                     animator.SetFloat(MoveX, Mathf.Abs(lookDir.x));
                     animator.SetFloat(MoveY, lookDir.y);
@@ -48,14 +57,20 @@ namespace Player
                     animator.SetFloat(MoveY, 0);
                     animator.SetFloat(Speed, 0);
                 }
+            }
 
+            if (weaponManager != null)
+            {
+                var weapon = weaponManager.GetCurrentWeapon();
                 if (weapon != null)
-                    weapon.SetLookDirection(lookDir, weaponManagerId);
-
-                if (_playerFlashlightController != null)
                 {
-                    _playerFlashlightController.UpdateLookDirection(lookDir);
+                    weapon.SetLookDirection(lookDir, weaponManager.NetworkObject.NetworkObjectId);
                 }
+            }
+
+            if (_playerFlashlightController != null)
+            {
+                _playerFlashlightController.UpdateLookDirection(lookDir);
             }
         }
 

@@ -394,6 +394,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
+  xpPickupPrefab: {fileID: 8045988666215530684, guid: b872b7786c4075a4eb31eeb74daf439e, type: 3}
+  xpValue: 10
 --- !u!114 &-896952260900849870
 MonoBehaviour:
   m_ObjectHideFlags: 0

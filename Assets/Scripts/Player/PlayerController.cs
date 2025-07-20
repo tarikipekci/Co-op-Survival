@@ -19,10 +19,10 @@ namespace Player
         public override void OnNetworkSpawn()
         {
             view = GetComponent<PlayerView>();
-            playerData = PlayerDataManager.Instance.GetOrCreatePlayerData(OwnerClientId);
-            model = new PlayerModel(playerData);
-            var health = GetComponent<PlayerHealth>();
-            health.InitializeHealth(model.MaxHealth);
+            if (view == null)
+            {
+                Debug.LogError("PlayerView component not found!");
+            }
         }
 
         private void Start()
@@ -31,12 +31,34 @@ namespace Player
             {
                 GameManager.Instance.AssignCameraToPlayer(transform);
                 _camera = GameManager.Instance.GetCamera();
+                if (_camera == null)
+                {
+                    Debug.LogError("Camera could not be assigned!");
+                }
+            }
+            
+            playerData = PlayerDataManager.Instance.GetOrCreatePlayerData(OwnerClientId);
+            if (playerData == null)
+            {
+                Debug.LogError($"PlayerData for client {OwnerClientId} not found!");
+                return;
+            }
+
+            model = new PlayerModel(playerData);
+            var health = GetComponent<PlayerHealth>();
+            if (health != null)
+            {
+                health.InitializeHealth(model.MaxHealth);
+            }
+            else
+            {
+                Debug.LogError("PlayerHealth component not found!");
             }
         }
 
         private void FixedUpdate()
         {
-            if (!IsOwner || _camera == null) return;
+            if (!IsOwner || _camera == null || playerData == null) return;
 
             model.MoveInput = new Vector2(
                 Input.GetAxisRaw("Horizontal"),

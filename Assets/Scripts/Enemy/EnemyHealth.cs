@@ -1,5 +1,6 @@
 using Unity.Netcode;
 using UnityEngine;
+using Manager;
 
 namespace Enemy
 {
@@ -9,6 +10,7 @@ namespace Enemy
         private NetworkVariable<int> currentHealth = new NetworkVariable<int>();
 
         private EnemyView enemyView;
+        [SerializeField] private int xpValue;
 
         public override void OnNetworkSpawn()
         {
@@ -34,10 +36,11 @@ namespace Enemy
 
             if (currentHealth.Value <= 0)
             {
-                DieClientRpc();
+                XPManager.Instance.SpawnXPPickupDelayed(transform.position, xpValue);
+                DieClientRpc(); 
             }
         }
-
+        
         [ClientRpc]
         private void DieClientRpc()
         {

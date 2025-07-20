@@ -48,10 +48,10 @@ namespace Enemy
 
         public void Move(Vector2 direction)
         {
-            model.target = FindClosestPlayerController().transform;
-            agent.SetDestination(model.target.position);
+            var closestPlayerController = FindClosestPlayerController();
 
-            //Server updates the value
+            model.target = closestPlayerController.transform;
+            agent.SetDestination(model.target.position);
             NetworkDirection.Value = direction;
         }
 

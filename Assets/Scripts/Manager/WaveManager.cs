@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using Data;
 using Enemy;
 using Interface;
-using Player;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.AI;
