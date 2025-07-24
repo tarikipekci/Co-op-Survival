@@ -27,7 +27,7 @@ namespace Weapon
 
             if (netObj != null && projectile != null)
             {
-                projectile.damage = weaponData.Damage;
+                projectile.damage = weaponData.Damage * playerData.Damage.Value;
                 netObj.Spawn(true);
                 projectile.Init(direction, ProjectileOwner.Player);
             }

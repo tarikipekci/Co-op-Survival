@@ -12,8 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 77e9aa871fd38164e908b42f6c543930, type: 3}
   m_Name: IncreaseHealth
   m_EditorClassIdentifier: 
-  upgradeName: Increase Health
-  description: Increase Health
-  icon: {fileID: 0}
+  upgradeName: Undying Will
+  description: '"Boost your chances of survival!"'
+  icon: {fileID: 7078957633047559561, guid: f085fd08c3278534ab5ff72cbd0aa346, type: 3}
+  upgradeId: hp1
   maxHealthCapacity: 6
   increaseAmount: 1

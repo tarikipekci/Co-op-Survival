@@ -1,4 +1,5 @@
 using Enemy;
+using Interface;
 using Player;
 using Unity.Netcode;
 using UnityEngine;
@@ -67,6 +68,11 @@ namespace Weapon
                 if (enemyHealth != null)
                 {
                     enemyHealth.TakeDamageServerRpc(damage);
+                }
+                else
+                {
+                    other.TryGetComponent<ICanTakeDamage>(out var damageable);
+                    damageable?.TakeDamage(damage);
                 }
             }
             else if (owner == ProjectileOwner.Enemy)

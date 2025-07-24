@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Player;
 using UnityEngine;
 using UnityEngine.UI;
@@ -8,9 +9,10 @@ namespace Manager
     {
         public static UIManager Instance { get; private set; }
 
-        [Header("Heart UI Elements")] [SerializeField]
-        private Image[] heartImages;
+        [Header("Heart UI Elements")] 
+        private List<Image> heartImages = new List<Image>();
 
+        [SerializeField] private Transform heartContainer;
         [SerializeField] private Sprite fullHeart;
         [SerializeField] private Sprite emptyHeart;
 
@@ -27,9 +29,27 @@ namespace Manager
 
         private void UpdateHearts(int currentHealth)
         {
-            for (int i = 0; i < heartImages.Length; i++)
+            int maxHealth = playerHealth.GetMaxHealth();
+            Debug.Log(maxHealth);
+
+            while (heartImages.Count < maxHealth)
             {
-                heartImages[i].sprite = i < currentHealth ? fullHeart : emptyHeart;
+                GameObject heartGO =
+                    new GameObject("Heart", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image));
+                heartGO.transform.SetParent(heartContainer, false);
+
+                Image heartImage = heartGO.GetComponent<Image>();
+                RectTransform rt = heartGO.GetComponent<RectTransform>();
+                rt.sizeDelta = new Vector2(50, 50);
+                heartImage.preserveAspect = true;
+                heartImages.Add(heartImage);
+            }
+
+            for (int i = 0; i < heartImages.Count; i++)
+            {
+                heartImages[i].gameObject.SetActive(i < maxHealth);
+                if (i < maxHealth)
+                    heartImages[i].sprite = i < currentHealth ? fullHeart : emptyHeart;
             }
         }
 
@@ -57,12 +77,7 @@ namespace Manager
             if (playerHealth != null)
                 playerHealth.OnHealthChanged -= UpdateHearts;
         }
-
-        public void ShowUpgradeOptions(PlayerData playerData)
-        {
-            upgradeUIManager.ShowUpgradeOptions(playerData);
-        }
-
+        
         public UpgradeUIManager GetUpgradeUIManager()
         {
             return upgradeUIManager;

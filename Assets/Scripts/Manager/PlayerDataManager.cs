@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using Player;
 using Unity.Netcode;
@@ -10,12 +11,13 @@ namespace Manager
         public static PlayerDataManager Instance;
         private Dictionary<ulong, PlayerData> playerDataDict = new Dictionary<ulong, PlayerData>();
 
-        [SerializeField] private GameObject playerDataPrefab; 
+        [SerializeField] private GameObject playerDataPrefab;
 
         private void Awake()
         {
             if (Instance == null) Instance = this;
             else Destroy(gameObject);
+
             DontDestroyOnLoad(gameObject);
         }
 
@@ -29,11 +31,17 @@ namespace Manager
 
         private void OnClientConnected(ulong clientId)
         {
-            if (IsServer)
-            {
-                var playerData = GetOrCreatePlayerData(clientId);
+            if (!IsServer) return;
+
+            StartCoroutine(DelayedCreatePlayerData(clientId));
+        }
+
+        private IEnumerator DelayedCreatePlayerData(ulong clientId)
+        {
+            yield return new WaitForSeconds(0.5f); 
+            var playerData = GetOrCreatePlayerData(clientId);
+            if (playerData != null)
                 SyncPlayerDataClientRpc(clientId, playerData.NetworkObject);
-            }
         }
 
         public PlayerData GetOrCreatePlayerData(ulong clientId)
@@ -42,7 +50,9 @@ namespace Manager
                 return existingData;
 
             var newData = CreatePlayerData(clientId);
-            playerDataDict.Add(clientId, newData);
+            if (newData != null)
+                playerDataDict.Add(clientId, newData);
+
             return newData;
         }
 
@@ -59,9 +69,16 @@ namespace Manager
             var pd = go.GetComponent<PlayerData>();
             var netObj = go.GetComponent<NetworkObject>();
 
-            if (IsServer && !netObj.IsSpawned)
+            if (IsServer)
             {
-                netObj.Spawn(true);
+                if (!netObj.IsSpawned)
+                {
+                    netObj.Spawn(true);
+                }
+                else
+                {
+                    Debug.LogWarning($"Tried to spawn PlayerData for Client {clientId} but it's already spawned.");
+                }
             }
 
             DontDestroyOnLoad(go);
@@ -71,6 +88,9 @@ namespace Manager
         [ClientRpc]
         private void SyncPlayerDataClientRpc(ulong clientId, NetworkObjectReference netObjRef)
         {
+            if (clientId != NetworkManager.Singleton.LocalClientId)
+                return;
+
             if (netObjRef.TryGet(out NetworkObject netObj))
             {
                 var playerData = netObj.GetComponent<PlayerData>();
@@ -78,6 +98,18 @@ namespace Manager
                 {
                     playerDataDict[clientId] = playerData;
                     Debug.Log($"Client {clientId} synced PlayerData.");
+
+                    var playerObj = NetworkManager.Singleton.SpawnManager.GetLocalPlayerObject();
+                    if (playerObj != null)
+                    {
+                        var playerController = playerObj.GetComponent<PlayerController>();
+                        if (playerController != null)
+                            playerController.SetPlayerData(playerData);
+                    }
+                    else
+                    {
+                        Debug.LogWarning("Local PlayerObject is not yet available.");
+                    }
                 }
             }
         }

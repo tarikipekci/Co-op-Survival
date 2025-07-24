@@ -12,8 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e04d45c1a884fb94aa175ccc0044459f, type: 3}
   m_Name: IncreaseMovementSpeed
   m_EditorClassIdentifier: 
-  upgradeName: Increase Movement Speed
-  description: Increase Movement Speed
-  icon: {fileID: 0}
+  upgradeName: Windwalker
+  description: "\"Move faster, survive longer.\u201D"
+  icon: {fileID: 21300000, guid: b780cf30d6c26e544a7f11ee48e65e72, type: 3}
+  upgradeId: mvspd1
   maxMovementSpeed: 6
   increaseAmount: 1

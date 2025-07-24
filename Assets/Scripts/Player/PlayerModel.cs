@@ -6,6 +6,11 @@ namespace Player
     {
         public float MoveSpeed { get; private set; }
         public int MaxHealth { get; private set; }
+
+        public int Damage { get; private set; }
+
+        public float AttackRate { get; private set; }
+
         public Vector2 MoveInput = Vector2.zero;
 
         private readonly PlayerData _playerData;
@@ -18,6 +23,20 @@ namespace Player
 
             playerData.MoveSpeed.OnValueChanged += OnMoveSpeedChanged;
             playerData.MaxHealth.OnValueChanged += OnMaxHealthChanged;
+            playerData.Damage.OnValueChanged += OnDamageChanged;
+            playerData.AttackRate.OnValueChanged += OnAttackRateChanged;
+        }
+
+        private void OnAttackRateChanged(float previousValue, float newValue)
+        {
+            AttackRate = newValue;
+            Debug.Log($"PlayerModel: AttackRate updated to {newValue}");
+        }
+
+        private void OnDamageChanged(int previousValue, int newValue)
+        {
+            Damage = newValue;
+            Debug.Log($"PlayerModel: Damage updated to {newValue}");
         }
 
         private void OnMoveSpeedChanged(float oldValue, float newValue)

@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a075068de561aa949999a3e2464e722c, type: 3}
+  m_Name: IncreaseAttackRate
+  m_EditorClassIdentifier: 
+  upgradeName: Adrenaline Rush
+  description: '"Faster. Wilder. Deadlier!"'
+  icon: {fileID: 21300000, guid: eb7d59f5de2d87e4fb1d16462b10e5e1, type: 3}
+  upgradeId: atkspd1
+  minAttackRate: 0.1
+  decreaseAmount: 0.1

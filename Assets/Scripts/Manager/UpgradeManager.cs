@@ -19,10 +19,20 @@ namespace Manager
 
         public List<Upgrade> GetAvailableUpgrades(PlayerData playerData)
         {
-            return allUpgrades
+            var available = allUpgrades
                 .Where(upgrade => upgrade.IsAvailable(playerData))
-                .Take(3)
                 .ToList();
+
+            int count = Mathf.Min(3, available.Count);
+            return available
+                .OrderBy(_ => Random.value)
+                .Take(count)
+                .ToList();
+        }
+
+        public Upgrade GetUpgradeById(string id)
+        {
+            return allUpgrades.FirstOrDefault(u => u.Id == id);
         }
     }
 }

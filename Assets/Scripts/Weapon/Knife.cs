@@ -19,12 +19,13 @@ namespace Weapon
                 EnemyHealth enemyHealth = hit.GetComponentInParent<EnemyHealth>();
                 if (enemyHealth != null)
                 {
-                    enemyHealth.TakeDamageServerRpc(weaponData.Damage);
+                    enemyHealth.TakeDamageServerRpc(weaponData.Damage * playerData.Damage.Value);
+                    Debug.Log(playerData.Damage.Value);
                 }
                 else
                 {
                     hit.TryGetComponent<ICanTakeDamage>(out var damageable);
-                    damageable?.TakeDamage(weaponData.Damage);
+                    damageable?.TakeDamage(weaponData.Damage * playerData.Damage.Value);
                 }
             }
         }

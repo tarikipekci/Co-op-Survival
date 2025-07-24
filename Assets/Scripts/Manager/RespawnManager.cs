@@ -35,6 +35,12 @@ namespace Manager
         {
             if (!IsServer) return;
 
+            var existingPlayerObj = NetworkManager.Singleton.ConnectedClients[clientId].PlayerObject;
+            if (existingPlayerObj != null && existingPlayerObj.IsSpawned)
+            {
+                existingPlayerObj.Despawn();
+            }
+
             Transform spawnPoint = spawnPoints[Random.Range(0, spawnPoints.Length)];
             GameObject playerInstance = Instantiate(playerPrefab, spawnPoint.position, spawnPoint.rotation);
             playerInstance.GetComponent<NetworkObject>().SpawnAsPlayerObject(clientId);

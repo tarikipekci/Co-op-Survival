@@ -1,6 +1,7 @@
 using Data;
 using Interface;
 using Manager;
+using Player;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -10,6 +11,7 @@ namespace Weapon
     {
         [SerializeField] protected WeaponData weaponData;
         private Animator animator;
+        protected PlayerData playerData;
 
         private static readonly int AttackTrigger = Animator.StringToHash("Attack");
 
@@ -21,6 +23,13 @@ namespace Weapon
         {
             spriteRenderer = GetComponentInChildren<SpriteRenderer>();
             animator = GetComponentInChildren<Animator>();
+        }
+
+        public override void OnNetworkSpawn()
+        {
+            base.OnNetworkSpawn();
+            var myClientId = NetworkManager.Singleton.LocalClientId;
+            playerData = PlayerDataManager.Instance.GetOrCreatePlayerData(myClientId);
         }
 
         public virtual void Attack()
@@ -37,7 +46,7 @@ namespace Weapon
 
         protected bool IsCooldownOver()
         {
-            return Time.time >= lastAttackTime + weaponData.coolDown;
+            return Time.time >= lastAttackTime + weaponData.coolDown * playerData.AttackRate.Value;
         }
 
         public void SetLookDirection(Vector2 lookDir, ulong weaponManagerId)

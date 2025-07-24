@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6c69030a4862c9c408ecaa2924f80204, type: 3}
+  m_Name: IncreaseDamage
+  m_EditorClassIdentifier: 
+  upgradeName: Brutal Force
+  description: '"Unleash devastating attacks!"'
+  icon: {fileID: 6764707825347140516, guid: d20135da423bb9247a4f68f06c9fa6a4, type: 3}
+  upgradeId: dmg1
+  maxDamageCapacity: 3
+  increaseAmount: 1

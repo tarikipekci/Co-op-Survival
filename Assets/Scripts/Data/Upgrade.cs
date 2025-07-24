@@ -10,10 +10,13 @@ namespace Data
         [SerializeField] private string description;
         [SerializeField] private Sprite icon;
 
+        [SerializeField] private string upgradeId;
+        public string Id => upgradeId;
+
         public string Name => upgradeName;
         public string Description => description;
-        public Sprite Icon => icon; 
-        
+        public Sprite Icon => icon;
+
         public virtual bool IsAvailable(PlayerData playerData)
         {
             throw new System.NotImplementedException();

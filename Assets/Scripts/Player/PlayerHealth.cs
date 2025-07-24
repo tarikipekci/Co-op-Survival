@@ -28,9 +28,37 @@ namespace Player
                 maxHealth = initialHealth;
                 currentHealth.Value = maxHealth;
             }
+            else
+            {
+                var playerData = PlayerDataManager.Instance.GetOrCreatePlayerData(OwnerClientId);
+                if (playerData != null)
+                {
+                    maxHealth = playerData.MaxHealth.Value;
+
+                    if (maxHealth == 0)
+                    {
+                        playerData.MaxHealth.OnValueChanged += OnMaxHealthSynced;
+                    }
+                }
+            }
 
             if (IsOwner)
                 UIManager.Instance?.RegisterPlayerHealth(this);
+        }
+
+        private void OnMaxHealthSynced(int oldVal, int newVal)
+        {
+            var playerData = PlayerDataManager.Instance.GetOrCreatePlayerData(OwnerClientId);
+            if (playerData == null) return;
+
+            maxHealth = newVal;
+
+            if (IsServer)
+            {
+                currentHealth.Value = maxHealth;
+            }
+
+            playerData.MaxHealth.OnValueChanged -= OnMaxHealthSynced;
         }
 
         private void OnHealthValueChanged(int oldValue, int newValue)
@@ -61,7 +89,11 @@ namespace Player
             flashlightController?.RemoveFlashlight();
 
             OnPlayerDied?.Invoke(OwnerClientId);
-            NetworkObject.Despawn();
+
+            if (NetworkObject != null && NetworkObject.IsSpawned)
+            {
+                NetworkObject.Despawn();
+            }
         }
 
         public int GetMaxHealth()
@@ -71,12 +103,26 @@ namespace Player
 
         public void IncreaseCurrentHealth(int amount)
         {
+            if (!IsServer) return;
+
             currentHealth.Value = Mathf.Clamp(currentHealth.Value + amount, 0, maxHealth);
         }
 
         public void FullHealth()
         {
+            if (!IsServer) return;
+
             currentHealth.Value = maxHealth;
+        }
+
+        public void UpdateMaxHealth(int newValue)
+        {
+            maxHealth = newValue;
+
+            if (!IsServer) return;
+
+            if (currentHealth.Value != maxHealth)
+                currentHealth.Value = maxHealth;
         }
 
         public override void OnNetworkDespawn()
