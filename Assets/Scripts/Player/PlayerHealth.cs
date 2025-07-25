@@ -14,10 +14,10 @@ namespace Player
         private NetworkVariable<int> currentHealth = new NetworkVariable<int>();
 
         public delegate void OnDeathHandler(ulong clientId);
-
         public static event OnDeathHandler OnPlayerDied;
 
         public int CurrentHealth => currentHealth.Value;
+        private bool isDead;
 
         public void InitializeHealth(int initialHealth)
         {
@@ -65,8 +65,9 @@ namespace Player
         {
             OnHealthChanged?.Invoke(newValue);
 
-            if (IsServer && newValue <= 0)
+            if (IsServer && newValue <= 0 && !isDead)
             {
+                isDead = true;
                 currentHealth.Value = 0;
                 StartCoroutine(DelayedDestroy());
             }
@@ -112,6 +113,7 @@ namespace Player
         {
             if (!IsServer) return;
 
+            isDead = false;
             currentHealth.Value = maxHealth;
         }
 
@@ -121,6 +123,7 @@ namespace Player
 
             if (!IsServer) return;
 
+            isDead = false;
             if (currentHealth.Value != maxHealth)
                 currentHealth.Value = maxHealth;
         }

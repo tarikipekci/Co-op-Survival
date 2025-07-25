@@ -564,7 +564,7 @@ MonoBehaviour:
       count: 12
     - enemyPrefab: {fileID: 3624296893283097346, guid: 67cf67bf2d325934bb4e88fe5ebe91bc, type: 3}
       count: 6
-    isNight: 0
+    isNight: 1
     boss:
       enemyPrefab: {fileID: 0}
       count: 0
