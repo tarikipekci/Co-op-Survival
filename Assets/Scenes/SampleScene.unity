@@ -364,8 +364,8 @@ MonoBehaviour:
     m_InternalValue: 0
   Level:
     m_InternalValue: 1
-  xpPerLevel: 100
-  requiredXPMultiplier: 100
+  xpPerLevel: 10
+  requiredXPMultiplier: 10
   xpPickupPrefab: {fileID: 8045988666215530684, guid: b872b7786c4075a4eb31eeb74daf439e, type: 3}
 --- !u!4 &138827791
 Transform:
@@ -564,7 +564,7 @@ MonoBehaviour:
       count: 12
     - enemyPrefab: {fileID: 3624296893283097346, guid: 67cf67bf2d325934bb4e88fe5ebe91bc, type: 3}
       count: 6
-    isNight: 1
+    isNight: 0
     boss:
       enemyPrefab: {fileID: 0}
       count: 0

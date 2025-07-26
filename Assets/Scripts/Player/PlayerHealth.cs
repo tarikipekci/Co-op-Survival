@@ -14,6 +14,7 @@ namespace Player
         private NetworkVariable<int> currentHealth = new NetworkVariable<int>();
 
         public delegate void OnDeathHandler(ulong clientId);
+
         public static event OnDeathHandler OnPlayerDied;
 
         public int CurrentHealth => currentHealth.Value;
@@ -22,7 +23,8 @@ namespace Player
         public void InitializeHealth(int initialHealth)
         {
             currentHealth.OnValueChanged += OnHealthValueChanged;
-
+            var playerData = PlayerDataManager.Instance.GetOrCreatePlayerData(OwnerClientId);
+            
             if (IsServer)
             {
                 maxHealth = initialHealth;
@@ -30,20 +32,17 @@ namespace Player
             }
             else
             {
-                var playerData = PlayerDataManager.Instance.GetOrCreatePlayerData(OwnerClientId);
                 if (playerData != null)
                 {
                     maxHealth = playerData.MaxHealth.Value;
-
-                    if (maxHealth == 0)
-                    {
-                        playerData.MaxHealth.OnValueChanged += OnMaxHealthSynced;
-                    }
                 }
             }
 
             if (IsOwner)
+            {
                 UIManager.Instance?.RegisterPlayerHealth(this);
+                playerData.MaxHealth.OnValueChanged += OnMaxHealthSynced;
+            }
         }
 
         private void OnMaxHealthSynced(int oldVal, int newVal)
@@ -51,16 +50,30 @@ namespace Player
             var playerData = PlayerDataManager.Instance.GetOrCreatePlayerData(OwnerClientId);
             if (playerData == null) return;
 
-            maxHealth = newVal;
-
-            if (IsServer)
+            if (CurrentHealth == maxHealth)
             {
-                currentHealth.Value = maxHealth;
+                maxHealth = newVal;
+                UpdateCurrentHealthServerRpc(maxHealth);
+                OnHealthChanged?.Invoke(maxHealth);
             }
-
-            playerData.MaxHealth.OnValueChanged -= OnMaxHealthSynced;
+            else
+            {
+                var increaseAmount = newVal - maxHealth;
+                UpdateCurrentHealthServerRpc(CurrentHealth + increaseAmount);
+                maxHealth = newVal;
+                OnHealthChanged?.Invoke(currentHealth.Value);
+            }
         }
 
+        [ServerRpc(RequireOwnership = false)]
+        private void UpdateCurrentHealthServerRpc(int newCurrentHealth)
+        {
+            if (IsServer)
+            {
+                currentHealth.Value = newCurrentHealth;
+            }
+        }
+        
         private void OnHealthValueChanged(int oldValue, int newValue)
         {
             OnHealthChanged?.Invoke(newValue);
@@ -117,21 +130,13 @@ namespace Player
             currentHealth.Value = maxHealth;
         }
 
-        public void UpdateMaxHealth(int newValue)
-        {
-            maxHealth = newValue;
-
-            if (!IsServer) return;
-
-            isDead = false;
-            if (currentHealth.Value != maxHealth)
-                currentHealth.Value = maxHealth;
-        }
-
         public override void OnNetworkDespawn()
         {
             if (IsOwner)
                 UIManager.Instance?.UnregisterPlayerHealth(this);
+
+            var playerData = PlayerDataManager.Instance.GetOrCreatePlayerData(OwnerClientId);
+            playerData.MaxHealth.OnValueChanged -= OnMaxHealthSynced;
         }
     }
 }

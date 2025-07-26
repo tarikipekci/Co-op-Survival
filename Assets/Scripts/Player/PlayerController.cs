@@ -69,7 +69,6 @@ namespace Player
                 return;
             }
 
-            model.MoveInput = input;
             BroadcastMovementClientRpc(input, lookDir);
         }
 

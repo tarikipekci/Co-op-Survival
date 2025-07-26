@@ -22,9 +22,6 @@ namespace Player
         private void OnMaxHealthChanged(int oldValue, int newValue)
         {
             Debug.Log($"MaxHealth changed from {oldValue} to {newValue} for client {OwnerClientId}");
-            NetworkObject playerObj = NetworkManager.Singleton.SpawnManager.GetPlayerNetworkObject(OwnerClientId);
-            var healthComp = playerObj.GetComponent<PlayerHealth>();
-            healthComp.UpdateMaxHealth(MaxHealth.Value);
         }
 
         private void OnMoveSpeedChanged(float oldValue, float newValue)

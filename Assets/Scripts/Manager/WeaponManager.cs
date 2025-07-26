@@ -3,6 +3,7 @@ using Unity.Netcode;
 using UnityEngine;
 using Weapon;
 using System.Collections;
+using Player;
 using UnityEngine.Serialization;
 
 namespace Manager
@@ -47,6 +48,20 @@ namespace Manager
             }
         }
 
+        private bool IsFacingRight()
+        {
+            PlayerController controller = GetComponent<PlayerController>();
+            if (controller == null) return true;
+
+            Vector2 lookDir = controller.LookDirection.Value;
+            return lookDir.x >= 0;
+        }
+
+        private Transform GetActiveWeaponHolder()
+        {
+            return IsFacingRight() ? weaponHolderRight : weaponHolderLeft;
+        }
+
         private void Update()
         {
             if (!IsOwner) return;
@@ -78,7 +93,7 @@ namespace Manager
                 availableWeapons[index]?.weaponPrefab == null)
                 return;
 
-            if (weaponHolderRight == null)
+            if (weaponHolderRight == null || weaponHolderLeft == null)
             {
                 Debug.LogError("WeaponHolder is not assigned!");
                 return;
@@ -97,11 +112,12 @@ namespace Manager
             }
 
             currentWeapon = null;
+            var weaponHolder = GetActiveWeaponHolder();
 
             GameObject weaponInstance = Instantiate(
                 availableWeapons[index].weaponPrefab,
-                weaponHolderRight.position,
-                weaponHolderRight.rotation
+                weaponHolder.position,
+                weaponHolder.rotation
             );
 
             NetworkObject networkObject = weaponInstance.GetComponent<NetworkObject>();
@@ -139,7 +155,7 @@ namespace Manager
                 if (weapon != null)
                 {
                     currentWeapon = weapon;
-                    netObj.transform.position = weaponHolderRight.position;
+                    netObj.transform.position = GetActiveWeaponHolder().position;
                     netObj.transform.SetParent(transform);
                 }
             }

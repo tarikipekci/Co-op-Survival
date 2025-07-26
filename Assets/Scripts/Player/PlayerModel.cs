@@ -11,15 +11,16 @@ namespace Player
 
         public float AttackRate { get; private set; }
 
-        public Vector2 MoveInput = Vector2.zero;
-
         private readonly PlayerData _playerData;
+        private PlayerHealth _playerHealth;
 
         public PlayerModel(PlayerData playerData)
         {
             _playerData = playerData;
             MoveSpeed = playerData.MoveSpeed.Value;
             MaxHealth = playerData.MaxHealth.Value;
+            Damage = playerData.Damage.Value;
+            AttackRate = playerData.AttackRate.Value;
 
             playerData.MoveSpeed.OnValueChanged += OnMoveSpeedChanged;
             playerData.MaxHealth.OnValueChanged += OnMaxHealthChanged;
