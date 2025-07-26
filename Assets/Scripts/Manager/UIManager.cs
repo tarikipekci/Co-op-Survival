@@ -19,12 +19,24 @@ namespace Manager
         [Header("Upgrade UI")] [SerializeField]
         private UpgradeUIManager upgradeUIManager;
 
+        [Header("XP Bar")] [SerializeField] private Image xpBarImage;
+
         private PlayerHealth playerHealth;
 
         private void Awake()
         {
             if (Instance != null && Instance != this) Destroy(gameObject);
             else Instance = this;
+        }
+
+        private void Start()
+        {
+            if (XPManager.Instance != null)
+            {
+                XPManager.Instance.OnXPChanged += UpdateXPBar;
+
+                UpdateXPBar(XPManager.Instance.Experience.Value, XPManager.Instance.Experience.Value);
+            }
         }
 
         private void UpdateHearts(int currentHealth)
@@ -53,6 +65,12 @@ namespace Manager
             }
         }
 
+        private void UpdateXPBar(int currentXP, int requiredXP)
+        {
+            float fill = (requiredXP <= 0) ? 0 : Mathf.Clamp01((float)currentXP / requiredXP);
+            xpBarImage.fillAmount = fill;
+        }
+
         public void RegisterPlayerHealth(PlayerHealth health)
         {
             if (playerHealth != null)
@@ -76,8 +94,11 @@ namespace Manager
         {
             if (playerHealth != null)
                 playerHealth.OnHealthChanged -= UpdateHearts;
+
+            if (XPManager.Instance != null)
+                XPManager.Instance.OnXPChanged -= UpdateXPBar;
         }
-        
+
         public UpgradeUIManager GetUpgradeUIManager()
         {
             return upgradeUIManager;

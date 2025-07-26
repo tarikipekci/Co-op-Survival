@@ -12,11 +12,25 @@ namespace Manager
         public NetworkVariable<int> Experience = new NetworkVariable<int>();
         public NetworkVariable<int> Level = new NetworkVariable<int>(1);
 
-        [SerializeField] private int xpPerLevel = 100;
+        public NetworkVariable<int> xpPerLevel = new NetworkVariable<int>(100);
         [SerializeField] private int requiredXPMultiplier = 100;
 
         [SerializeField] private GameObject xpPickupPrefab;
         public event System.Action<int> OnLevelUp;
+        public event System.Action<int, int> OnXPChanged;
+
+        public override void OnNetworkSpawn()
+        {
+            if (IsClient)
+            {
+                Experience.OnValueChanged += OnXPChangedClient;
+            }
+        }
+
+        private void OnXPChangedClient(int oldValue, int newValue)
+        {
+            OnXPChanged?.Invoke(newValue, xpPerLevel.Value);
+        }
 
         private void Awake()
         {
@@ -35,16 +49,17 @@ namespace Manager
         {
             Experience.Value += amount;
             Debug.Log("Current experience is :" + Experience.Value);
+            OnXPChanged?.Invoke(Experience.Value, xpPerLevel.Value);
             CheckLevelUp();
         }
 
         private void CheckLevelUp()
         {
-            while (Experience.Value >= xpPerLevel)
+            while (Experience.Value >= xpPerLevel.Value)
             {
-                Experience.Value -= xpPerLevel;
+                Experience.Value -= xpPerLevel.Value;
                 Level.Value++;
-                xpPerLevel = Level.Value * requiredXPMultiplier;
+                xpPerLevel.Value = Level.Value * requiredXPMultiplier;
                 OnLevelUp?.Invoke(Level.Value);
             }
         }
@@ -67,6 +82,15 @@ namespace Manager
             xp.Activate(position);
 
             Debug.Log("XP spawned after delay.");
+        }
+
+        public override void OnNetworkDespawn()
+        {
+            base.OnNetworkDespawn();
+            if (IsClient)
+            {
+                Experience.OnValueChanged -= OnXPChangedClient;
+            }
         }
     }
 }
