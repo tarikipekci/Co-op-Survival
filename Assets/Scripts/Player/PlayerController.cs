@@ -113,6 +113,10 @@ namespace Player
         {
             if (IsServer)
                 ShowUpgradeUIClientRpc();
+            if (IsHost)
+            {
+                UpgradePhaseManager.Instance.StartUpgradePhase();
+            }
         }
 
         [ClientRpc]
@@ -139,6 +143,8 @@ namespace Player
             var upgrade = UpgradeManager.Instance.GetUpgradeById(upgradeId);
             if (upgrade != null && upgrade.IsAvailable(playerData))
                 upgrade.Apply(playerData);
+            
+            UpgradePhaseManager.Instance.RegisterPlayerSelection(rpcParams.Receive.SenderClientId);
         }
     }
 }

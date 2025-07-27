@@ -30,7 +30,7 @@ namespace Manager
                 card.Initialize(upgrade, () =>
                 {
                     playerController.RequestUpgradeServerRpc(upgrade.Id);
-                    HideUpgradeUI();
+                    HideUpgradeUIWithoutResume();
                 });
                 activeCards.Add(cardGO);
             }
@@ -41,12 +41,11 @@ namespace Manager
         private void HideUpgradeUI()
         {
             gameObject.SetActive(false);
-            ResumeGame();
         }
 
-        private void ResumeGame()
+        public void HideUpgradeUIWithoutResume()
         {
-            Time.timeScale = 1;
+            gameObject.SetActive(false);
         }
     }
 }
