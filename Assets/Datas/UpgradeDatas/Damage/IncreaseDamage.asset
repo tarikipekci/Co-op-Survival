@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: IncreaseDamage
   m_EditorClassIdentifier: 
   upgradeName: Brutal Force
-  description: '"Unleash devastating attacks!"'
+  description: '"Increases damage"'
   icon: {fileID: 6764707825347140516, guid: d20135da423bb9247a4f68f06c9fa6a4, type: 3}
   upgradeId: dmg1
   maxDamageCapacity: 3

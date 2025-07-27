@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: IncreaseHealth
   m_EditorClassIdentifier: 
   upgradeName: Undying Will
-  description: '"Boost your chances of survival!"'
+  description: '"Increases health"'
   icon: {fileID: 7078957633047559561, guid: f085fd08c3278534ab5ff72cbd0aa346, type: 3}
   upgradeId: hp1
   maxHealthCapacity: 6

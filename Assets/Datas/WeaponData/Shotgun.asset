@@ -15,5 +15,5 @@ MonoBehaviour:
   weaponName: Shotgun
   icon: {fileID: -6971013411626743141, guid: 7976a5ba76754784894d26df6092eb27, type: 3}
   weaponPrefab: {fileID: 8714887861823231327, guid: 02ac7d837ad47de4d827977173aa06c8, type: 3}
-  Damage: 5
+  Damage: 3
   coolDown: 2

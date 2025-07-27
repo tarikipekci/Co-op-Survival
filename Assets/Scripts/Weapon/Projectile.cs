@@ -43,10 +43,11 @@ namespace Weapon
             transform.rotation = Quaternion.Euler(0, 0, angle);
         }
 
-        public void Init(Vector2 dir, ProjectileOwner ownerType)
+        public void Init(Vector2 dir, ProjectileOwner ownerType, int damageValue)
         {
             direction.Value = dir;
             owner = ownerType;
+            damage = damageValue;
         }
 
         private void OnTriggerEnter2D(Collider2D other)

@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: IncreaseAttackRate
   m_EditorClassIdentifier: 
   upgradeName: Adrenaline Rush
-  description: '"Faster. Wilder. Deadlier!"'
+  description: '"Increases attack speed"'
   icon: {fileID: 21300000, guid: eb7d59f5de2d87e4fb1d16462b10e5e1, type: 3}
   upgradeId: atkspd1
   minAttackRate: 0.1

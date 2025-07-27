@@ -15,11 +15,12 @@ namespace Weapon
             lastAttackTime = Time.time;
             
             Vector2 direction = transform.right;
-            ShootServerRpc(firePoint.position, direction);
+            int totalDamage = Mathf.RoundToInt(weaponData.Damage * playerData.Damage.Value);
+            ShootServerRpc(firePoint.position, direction, totalDamage);
         }
 
         [ServerRpc(RequireOwnership = false)]
-        private void ShootServerRpc(Vector2 spawnPosition, Vector2 direction)
+        private void ShootServerRpc(Vector2 spawnPosition, Vector2 direction, int damage)
         {
             GameObject proj = Instantiate(projectilePrefab, spawnPosition, Quaternion.identity);
             var netObj = proj.GetComponent<NetworkObject>();
@@ -27,9 +28,8 @@ namespace Weapon
 
             if (netObj != null && projectile != null)
             {
-                projectile.damage = weaponData.Damage * playerData.Damage.Value;
                 netObj.Spawn(true);
-                projectile.Init(direction, ProjectileOwner.Player);
+                projectile.Init(direction, ProjectileOwner.Player, damage);
             }
             else
             {

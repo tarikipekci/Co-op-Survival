@@ -90,7 +90,7 @@ namespace Enemy
             projectile.GetComponent<NetworkObject>().Spawn();
 
             var dir = (targetPosition - spawnPos).normalized;
-            projectile.GetComponent<Projectile>().Init(dir, ProjectileOwner.Enemy);
+            projectile.GetComponent<Projectile>().Init(dir, ProjectileOwner.Enemy, model.Damage);
         }
 
         [ClientRpc]
