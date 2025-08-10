@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using Player;
 using UI;
-using Unity.Netcode;
 using UnityEngine;
 
 namespace Manager
@@ -20,8 +19,6 @@ namespace Manager
             activeCards.Clear();
 
             var upgrades = UpgradeManager.Instance.GetAvailableUpgrades(playerData);
-            var playerController =
-                NetworkManager.Singleton.LocalClient.PlayerObject.GetComponent<PlayerController>();
 
             foreach (var upgrade in upgrades)
             {
@@ -29,18 +26,13 @@ namespace Manager
                 var card = cardGO.GetComponent<UpgradeCardUI>();
                 card.Initialize(upgrade, () =>
                 {
-                    playerController.RequestUpgradeServerRpc(upgrade.Id);
+                    UpgradePhaseManager.Instance.RequestUpgradeServerRpc(upgrade.Id);
                     HideUpgradeUIWithoutResume();
                 });
                 activeCards.Add(cardGO);
             }
 
             gameObject.SetActive(true);
-        }
-
-        private void HideUpgradeUI()
-        {
-            gameObject.SetActive(false);
         }
 
         public void HideUpgradeUIWithoutResume()

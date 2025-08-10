@@ -19,19 +19,6 @@ namespace Manager
         public event System.Action<int> OnLevelUp;
         public event System.Action<int, int> OnXPChanged;
 
-        public override void OnNetworkSpawn()
-        {
-            if (IsClient)
-            {
-                Experience.OnValueChanged += OnXPChangedClient;
-            }
-        }
-
-        private void OnXPChangedClient(int oldValue, int newValue)
-        {
-            OnXPChanged?.Invoke(newValue, xpPerLevel.Value);
-        }
-
         private void Awake()
         {
             if (Instance != null && Instance != this)
@@ -42,6 +29,24 @@ namespace Manager
 
             Instance = this;
             DontDestroyOnLoad(gameObject);
+        }
+
+        public override void OnNetworkSpawn()
+        {
+            if (IsServer)
+            {
+                OnLevelUp += HandleLevelUp;
+            }
+
+            if (IsClient)
+            {
+                Experience.OnValueChanged += OnXPChangedClient;
+            }
+        }
+
+        private void OnXPChangedClient(int oldValue, int newValue)
+        {
+            OnXPChanged?.Invoke(newValue, xpPerLevel.Value);
         }
 
         [ServerRpc(RequireOwnership = false)]
@@ -62,6 +67,33 @@ namespace Manager
                 xpPerLevel.Value = Level.Value * requiredXPMultiplier;
                 OnLevelUp?.Invoke(Level.Value);
             }
+        }
+
+        private void HandleLevelUp(int newLevel)
+        {
+            if (IsServer)
+                ShowUpgradeUIClientRpc();
+            if (IsHost)
+            {
+                UpgradePhaseManager.Instance.StartUpgradePhase();
+            }
+        }
+
+        [ClientRpc]
+        private void ShowUpgradeUIClientRpc()
+        {
+            Time.timeScale = 0f;
+
+            var playerData = PlayerDataManager.Instance.GetOrCreatePlayerData(NetworkManager.Singleton.LocalClientId);
+            if (playerData == null)
+            {
+                Debug.LogError("PlayerData not found for upgrade UI.");
+                return;
+            }
+
+            var upgradeUI = UIManager.Instance.GetUpgradeUIManager();
+            if (upgradeUI != null)
+                upgradeUI.ShowUpgradeOptions(playerData);
         }
 
         public void SpawnXPPickupDelayed(Vector3 position, int amount, float delay = 1.0f)
@@ -90,6 +122,11 @@ namespace Manager
             if (IsClient)
             {
                 Experience.OnValueChanged -= OnXPChangedClient;
+            }
+
+            if (IsServer)
+            {
+                OnLevelUp -= HandleLevelUp;
             }
         }
     }

@@ -21,19 +21,6 @@ namespace Player
             view = GetComponent<PlayerView>();
             if (view == null)
                 Debug.LogError("PlayerView component not found!");
-            
-            if (IsOwner)
-            {
-                XPManager.Instance.OnLevelUp += HandleLevelUp;
-            }
-        }
-
-        public override void OnNetworkDespawn()
-        {
-            if (IsOwner && XPManager.Instance != null)
-            {
-                XPManager.Instance.OnLevelUp -= HandleLevelUp;
-            }
         }
 
         private void Start()
@@ -107,44 +94,6 @@ namespace Player
                 if (_camera == null)
                     Debug.LogError("Camera could not be assigned!");
             }
-        }
-
-        private void HandleLevelUp(int newLevel)
-        {
-            if (IsServer)
-                ShowUpgradeUIClientRpc();
-            if (IsHost)
-            {
-                UpgradePhaseManager.Instance.StartUpgradePhase();
-            }
-        }
-
-        [ClientRpc]
-        private void ShowUpgradeUIClientRpc()
-        {
-            Time.timeScale = 0f;
-
-            var playerData = PlayerDataManager.Instance.GetOrCreatePlayerData(OwnerClientId);
-            if (playerData == null)
-            {
-                Debug.LogError("PlayerData not found for upgrade UI.");
-                return;
-            }
-
-            UpgradeUIManager upgradeUI = UIManager.Instance.GetUpgradeUIManager();
-            if (upgradeUI != null)
-                upgradeUI.ShowUpgradeOptions(playerData);
-        }
-
-        [ServerRpc(RequireOwnership = false)]
-        public void RequestUpgradeServerRpc(string upgradeId, ServerRpcParams rpcParams = default)
-        {
-            var playerData = PlayerDataManager.Instance.GetOrCreatePlayerData(rpcParams.Receive.SenderClientId);
-            var upgrade = UpgradeManager.Instance.GetUpgradeById(upgradeId);
-            if (upgrade != null && upgrade.IsAvailable(playerData))
-                upgrade.Apply(playerData);
-            
-            UpgradePhaseManager.Instance.RegisterPlayerSelection(rpcParams.Receive.SenderClientId);
         }
     }
 }

@@ -50,30 +50,39 @@ namespace Player
             var playerData = PlayerDataManager.Instance.GetOrCreatePlayerData(OwnerClientId);
             if (playerData == null) return;
 
-            if (CurrentHealth == maxHealth)
+            if (!isDead)
             {
-                maxHealth = newVal;
-                UpdateCurrentHealthServerRpc(maxHealth);
-                OnHealthChanged?.Invoke(maxHealth);
-            }
-            else
-            {
-                var increaseAmount = newVal - maxHealth;
-                UpdateCurrentHealthServerRpc(CurrentHealth + increaseAmount);
-                maxHealth = newVal;
-                OnHealthChanged?.Invoke(currentHealth.Value);
+                if (CurrentHealth == maxHealth)
+                {
+                    maxHealth = newVal;
+                    UpdateCurrentHealthServerRpc(maxHealth);
+                    OnHealthChanged?.Invoke(maxHealth);
+                }
+                else
+                {
+                    var increaseAmount = newVal - maxHealth;
+                    UpdateCurrentHealthServerRpc(CurrentHealth + increaseAmount);
+                    maxHealth = newVal;
+                    OnHealthChanged?.Invoke(currentHealth.Value);
+                }
             }
         }
 
         [ServerRpc(RequireOwnership = false)]
         private void UpdateCurrentHealthServerRpc(int newCurrentHealth)
         {
-            if (IsServer)
+            if (!IsServer)
+                return;
+
+            if (NetworkObject == null || !NetworkObject.IsSpawned)
             {
-                currentHealth.Value = newCurrentHealth;
+                Debug.LogWarning("PlayerHealth NetworkObject is null or not spawned, can't update health.");
+                return;
             }
+
+            currentHealth.Value = newCurrentHealth;
         }
-        
+
         private void OnHealthValueChanged(int oldValue, int newValue)
         {
             OnHealthChanged?.Invoke(newValue);

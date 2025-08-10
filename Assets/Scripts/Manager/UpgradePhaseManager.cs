@@ -27,7 +27,7 @@ namespace Manager
             playersWhoSelectedUpgrade.Clear();
         }
 
-        public void RegisterPlayerSelection(ulong clientId)
+        private void RegisterPlayerSelection(ulong clientId)
         {
             if (!IsServer) return;
 
@@ -48,6 +48,23 @@ namespace Manager
             var upgradeUI = UIManager.Instance.GetUpgradeUIManager();
             if (upgradeUI != null)
                 upgradeUI.HideUpgradeUIWithoutResume();
+        }
+
+        [ServerRpc(RequireOwnership = false)]
+        public void RequestUpgradeServerRpc(string upgradeId, ServerRpcParams rpcParams = default)
+        {
+            ulong clientId = rpcParams.Receive.SenderClientId;
+            var playerData = PlayerDataManager.Instance.GetOrCreatePlayerData(clientId);
+
+            if (playerData == null) return;
+            if (playerData.NetworkObject == null || !playerData.NetworkObject.IsSpawned) return;
+
+            var upgrade = UpgradeManager.Instance.GetUpgradeById(upgradeId);
+            if (upgrade == null) return;
+            if (!upgrade.IsAvailable(playerData)) return;
+
+            upgrade.Apply(playerData);
+            RegisterPlayerSelection(clientId);
         }
     }
 }

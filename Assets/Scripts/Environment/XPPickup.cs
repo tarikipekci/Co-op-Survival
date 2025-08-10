@@ -20,8 +20,7 @@ namespace Environment
             transform.position = spawnPos;
             isActive = true;
 
-            if (followRoutine == null)
-                followRoutine = StartCoroutine(CheckForPlayerAndFollow());
+            followRoutine ??= StartCoroutine(CheckForPlayerAndFollow());
         }
 
         private IEnumerator CheckForPlayerAndFollow()
