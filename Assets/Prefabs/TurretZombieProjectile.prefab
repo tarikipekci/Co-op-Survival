@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 6960466651682702035}
   - component: {fileID: 969591995101583209}
   - component: {fileID: 2609854161861407069}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: TurretZombieProjectile
   m_TagString: Projectile
   m_Icon: {fileID: 0}

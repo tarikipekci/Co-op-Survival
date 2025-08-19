@@ -7,8 +7,8 @@ namespace Weapon
     {
         [SerializeField] private GameObject projectilePrefab;
         [SerializeField] private Transform firePoint;
-        [SerializeField] private int pelletCount = 6;
-        [SerializeField] private float spreadAngle = 15f;
+        [SerializeField] private int pelletCount = 3;
+        [SerializeField] private float spreadAngle = 30f;
 
         public override void Attack()
         {

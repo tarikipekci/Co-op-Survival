@@ -802,7 +802,7 @@ GameObject:
   - component: {fileID: 568571532}
   - component: {fileID: 568571531}
   - component: {fileID: 568571530}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Border
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9176,7 +9176,7 @@ GameObject:
   - component: {fileID: 705423496}
   - component: {fileID: 705423495}
   - component: {fileID: 705423494}
-  m_Layer: 7
+  m_Layer: 4
   m_Name: Obstacles
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -11698,7 +11698,7 @@ GameObject:
   - component: {fileID: 886141708}
   - component: {fileID: 886141710}
   - component: {fileID: 886141709}
-  m_Layer: 0
+  m_Layer: 4
   m_Name: Tilemap
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -96472,7 +96472,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1020387753}
   - component: {fileID: 1020387752}
-  m_Layer: 0
+  m_Layer: 4
   m_Name: Grid
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -96848,7 +96848,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1185383822}
-  m_Layer: 0
+  m_Layer: 4
   m_Name: Grids
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -97075,7 +97075,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1349123040}
   - component: {fileID: 1349123041}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Grid
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -97583,7 +97583,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1580691356}
   - component: {fileID: 1580691355}
-  m_Layer: 0
+  m_Layer: 4
   m_Name: Grid
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -97629,7 +97629,7 @@ GameObject:
   - component: {fileID: 1645384168}
   - component: {fileID: 1645384170}
   - component: {fileID: 1645384169}
-  m_Layer: 0
+  m_Layer: 4
   m_Name: Environment
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -98396,7 +98396,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1995230898}
   - component: {fileID: 1995230897}
-  m_Layer: 0
+  m_Layer: 4
   m_Name: Grid
   m_TagString: Untagged
   m_Icon: {fileID: 0}

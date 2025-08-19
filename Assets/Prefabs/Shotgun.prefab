@@ -108,7 +108,7 @@ MonoBehaviour:
   projectilePrefab: {fileID: 6219810915904028772, guid: baae1790c5f9f764582311332ff62976, type: 3}
   firePoint: {fileID: 8239123736216784814}
   pelletCount: 6
-  spreadAngle: 15
+  spreadAngle: 30
 --- !u!1 &8716856576176338661
 GameObject:
   m_ObjectHideFlags: 0
