@@ -144,8 +144,21 @@ namespace Player
             if (IsOwner)
                 UIManager.Instance?.UnregisterPlayerHealth(this);
 
+            if (PlayerDataManager.Instance == null)
+                return;
+
             var playerData = PlayerDataManager.Instance.GetOrCreatePlayerData(OwnerClientId);
-            playerData.MaxHealth.OnValueChanged -= OnMaxHealthSynced;
+            if (playerData != null && playerData.MaxHealth != null)
+            {
+                try
+                {
+                    playerData.MaxHealth.OnValueChanged -= OnMaxHealthSynced;
+                }
+                catch (Exception ex)
+                {
+                    Debug.LogWarning($"Failed to remove OnMaxHealthSynced for client {OwnerClientId}: {ex.Message}");
+                }
+            }
         }
     }
 }

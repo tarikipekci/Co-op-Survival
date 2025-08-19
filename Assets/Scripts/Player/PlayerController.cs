@@ -1,6 +1,7 @@
 using Manager;
 using Unity.Netcode;
 using UnityEngine;
+using System.Collections;
 
 namespace Player
 {
@@ -25,6 +26,24 @@ namespace Player
 
         private void Start()
         {
+            if (PlayerDataManager.Instance == null || PlayerDataManager.Instance.GetOrCreatePlayerData(OwnerClientId) == null)
+            {
+                Debug.Log($"[PlayerController] Player Data is not ready yet! Waiting... (ClientId: {OwnerClientId})");
+                StartCoroutine(WaitForPlayerData());
+                return;
+            }
+
+            playerData = PlayerDataManager.Instance.GetOrCreatePlayerData(OwnerClientId);
+            SetPlayerData(playerData);
+        }
+
+        private IEnumerator WaitForPlayerData()
+        {
+            yield return new WaitUntil(() =>
+                PlayerDataManager.Instance != null &&
+                PlayerDataManager.Instance.GetOrCreatePlayerData(OwnerClientId) != null
+            );
+
             playerData = PlayerDataManager.Instance.GetOrCreatePlayerData(OwnerClientId);
             SetPlayerData(playerData);
         }
@@ -70,7 +89,7 @@ namespace Player
 
         public PlayerView GetView() => view;
 
-        public void SetPlayerData(PlayerData newPlayerData)
+        private void SetPlayerData(PlayerData newPlayerData)
         {
             if (newPlayerData == null)
             {
@@ -82,7 +101,8 @@ namespace Player
 
             var health = GetComponent<PlayerHealth>();
             if (health != null)
-                health.InitializeHealth(model.MaxHealth);
+                health.InitializeHealth(model.MaxHealth
+                );
             else
                 Debug.LogError("PlayerHealth component not found!");
 
@@ -94,6 +114,8 @@ namespace Player
                 if (_camera == null)
                     Debug.LogError("Camera could not be assigned!");
             }
+
+            Debug.Log($"[PlayerController] Player Data is ready (ClientId: {OwnerClientId})");
         }
     }
 }

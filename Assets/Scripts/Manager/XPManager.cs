@@ -28,7 +28,6 @@ namespace Manager
             }
 
             Instance = this;
-            DontDestroyOnLoad(gameObject);
         }
 
         public override void OnNetworkSpawn()

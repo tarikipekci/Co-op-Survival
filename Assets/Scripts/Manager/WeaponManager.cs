@@ -28,7 +28,7 @@ namespace Manager
 
         private IEnumerator EquipInitialWeapon()
         {
-            yield return new WaitForSeconds(0.5f);
+            yield return new WaitForSeconds(1f);
             EquipWeaponServerRpc(0);
         }
 

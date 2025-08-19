@@ -17,8 +17,6 @@ namespace Manager
         {
             if (Instance == null) Instance = this;
             else Destroy(gameObject);
-
-            DontDestroyOnLoad(gameObject);
         }
 
         public override void OnNetworkSpawn()
@@ -38,7 +36,7 @@ namespace Manager
 
         private IEnumerator DelayedCreatePlayerData(ulong clientId)
         {
-            yield return new WaitForSeconds(0.5f); 
+            yield return new WaitForSeconds(0.5f);
             var playerData = GetOrCreatePlayerData(clientId);
             if (playerData != null)
                 SyncPlayerDataClientRpc(clientId, playerData.NetworkObject);
@@ -48,6 +46,12 @@ namespace Manager
         {
             if (playerDataDict.TryGetValue(clientId, out var existingData))
                 return existingData;
+
+            if (!IsServer)
+            {
+                RequestPlayerDataServerRpc(clientId);
+                return null;
+            }
 
             var newData = CreatePlayerData(clientId);
             if (newData != null)
@@ -85,31 +89,31 @@ namespace Manager
             return pd;
         }
 
-        [ClientRpc]
-        private void SyncPlayerDataClientRpc(ulong clientId, NetworkObjectReference netObjRef)
+        [ServerRpc(RequireOwnership = false)]
+        private void RequestPlayerDataServerRpc(ulong clientId, ServerRpcParams rpcParams = default)
         {
-            if (clientId != NetworkManager.Singleton.LocalClientId)
-                return;
+            if (!IsServer) return;
 
+            var playerData = GetOrCreatePlayerData(clientId);
+            if (playerData != null)
+            {
+                SyncPlayerDataClientRpc(clientId, playerData.NetworkObject, new ClientRpcParams
+                {
+                    Send = new ClientRpcSendParams { TargetClientIds = new[] { clientId } }
+                });
+            }
+        }
+
+        [ClientRpc]
+        private void SyncPlayerDataClientRpc(ulong clientId, NetworkObjectReference netObjRef,
+            ClientRpcParams rpcParams = default)
+        {
             if (netObjRef.TryGet(out NetworkObject netObj))
             {
-                var playerData = netObj.GetComponent<PlayerData>();
-                if (playerData != null)
+                var pd = netObj.GetComponent<PlayerData>();
+                if (pd != null)
                 {
-                    playerDataDict[clientId] = playerData;
-                    Debug.Log($"Client {clientId} synced PlayerData.");
-
-                    var playerObj = NetworkManager.Singleton.SpawnManager.GetLocalPlayerObject();
-                    if (playerObj != null)
-                    {
-                        var playerController = playerObj.GetComponent<PlayerController>();
-                        if (playerController != null)
-                            playerController.SetPlayerData(playerData);
-                    }
-                    else
-                    {
-                        Debug.LogWarning("Local PlayerObject is not yet available.");
-                    }
+                    playerDataDict[clientId] = pd;
                 }
             }
         }

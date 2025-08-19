@@ -1,4 +1,6 @@
+using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace UI
 {
@@ -25,6 +27,18 @@ namespace UI
         {
             multiplayerPanel.SetActive(false);
             clientPanel.SetActive(true);
+        }
+
+        public void StartGameOnSinglePlayer()
+        {
+            NetworkManager.Singleton.StartHost();
+            if (!NetworkManager.Singleton.IsHost) return;
+            NetworkManager.Singleton.SceneManager.LoadScene("Level", LoadSceneMode.Single);
+        }
+
+        public void QuitGame()
+        {
+            Application.Quit();
         }
     }
 }
