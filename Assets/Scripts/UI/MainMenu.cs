@@ -11,20 +11,34 @@ namespace UI
         [SerializeField] private GameObject hostPanel;
         [SerializeField] private GameObject clientPanel;
 
+         public void OpenMainMenu()
+        {
+            hostPanel.SetActive(false);
+            clientPanel.SetActive(false);
+            multiplayerPanel.SetActive(false);
+            mainMenuPanel.SetActive(true);
+        }
+        
         public void OpenMultiplayerPanel()
         {
             mainMenuPanel.SetActive(false);
+            hostPanel.SetActive(false);
+            clientPanel.SetActive(false);
             multiplayerPanel.SetActive(true);
         }
 
         public void OpenHostPanel()
         {
+            mainMenuPanel.SetActive(false);
             multiplayerPanel.SetActive(false);
+            clientPanel.SetActive(false);
             hostPanel.SetActive(true);
         }
 
         public void OpenClientPanel()
         {
+            mainMenuPanel.SetActive(false);
+            hostPanel.SetActive(false);
             multiplayerPanel.SetActive(false);
             clientPanel.SetActive(true);
         }
