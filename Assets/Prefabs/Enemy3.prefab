@@ -125,7 +125,35 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
-  TransitionStateInfoList: []
+  TransitionStateInfoList:
+  - IsCrossFadeExit: 0
+    Layer: 0
+    OriginatingState: 1432928077
+    DestinationState: 1333172597
+    TransitionDuration: 0.25
+    TriggerNameHash: 1654612129
+    TransitionIndex: 3
+  - IsCrossFadeExit: 0
+    Layer: 0
+    OriginatingState: -815840339
+    DestinationState: 446899914
+    TransitionDuration: 0.25
+    TriggerNameHash: 1654612129
+    TransitionIndex: 3
+  - IsCrossFadeExit: 0
+    Layer: 0
+    OriginatingState: -1203451350
+    DestinationState: 1425847934
+    TransitionDuration: 0.25
+    TriggerNameHash: 1654612129
+    TransitionIndex: 3
+  - IsCrossFadeExit: 0
+    Layer: 0
+    OriginatingState: 1205953674
+    DestinationState: 1333172597
+    TransitionDuration: 0.25
+    TriggerNameHash: 1654612129
+    TransitionIndex: 3
   m_Animator: {fileID: 9191192016983921420}
 --- !u!61 &8719756683654971994
 BoxCollider2D:
@@ -394,7 +422,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
-  xpPickupPrefab: {fileID: 8045988666215530684, guid: b872b7786c4075a4eb31eeb74daf439e, type: 3}
   xpValue: 10
 --- !u!114 &9180889399392080602
 MonoBehaviour:

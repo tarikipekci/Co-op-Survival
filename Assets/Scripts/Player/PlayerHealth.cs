@@ -24,11 +24,14 @@ namespace Player
         {
             currentHealth.OnValueChanged += OnHealthValueChanged;
             var playerData = PlayerDataManager.Instance.GetOrCreatePlayerData(OwnerClientId);
-            
+
             if (IsServer)
             {
                 maxHealth = initialHealth;
                 currentHealth.Value = maxHealth;
+
+                if (playerData != null)
+                    playerData.MaxHealth.OnValueChanged += OnMaxHealthSynced; 
             }
             else
             {
@@ -41,7 +44,7 @@ namespace Player
             if (IsOwner)
             {
                 UIManager.Instance?.RegisterPlayerHealth(this);
-                playerData.MaxHealth.OnValueChanged += OnMaxHealthSynced;
+                playerData.MaxHealth.OnValueChanged += OnMaxHealthSynced; 
             }
         }
 

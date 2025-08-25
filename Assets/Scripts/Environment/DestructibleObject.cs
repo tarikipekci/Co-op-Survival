@@ -12,6 +12,7 @@ namespace Environment
         [SerializeField] private GameObject destroyEffect;
 
         private IDropProvider dropProvider;
+        private bool isDead; 
 
         private void Awake()
         {
@@ -23,6 +24,7 @@ namespace Environment
         {
             if (IsServer)
             {
+                if (isDead) return; 
                 currentHealth -= amount;
 
                 if (currentHealth <= 0)
@@ -44,6 +46,9 @@ namespace Environment
 
         private void Die()
         {
+            if (isDead) return; 
+            isDead = true;
+
             if (destroyEffect != null)
             {
                 var fx = Instantiate(destroyEffect, transform.position, Quaternion.identity);
