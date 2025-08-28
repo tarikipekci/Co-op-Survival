@@ -63,11 +63,11 @@ namespace Player
 
             view.Move(moveInput, model.MoveSpeed, lookDir);
 
-            SubmitMovementServerRpc(moveInput, lookDir);
+            SubmitMovementServerRpc(moveInput, lookDir, model.MoveSpeed);
         }
 
         [ServerRpc]
-        private void SubmitMovementServerRpc(Vector2 input, Vector2 lookDir)
+        private void SubmitMovementServerRpc(Vector2 input, Vector2 lookDir, float moveSpeed)
         {
             if (model == null)
             {
@@ -75,16 +75,16 @@ namespace Player
                 return;
             }
 
-            BroadcastMovementClientRpc(input, lookDir);
+            BroadcastMovementClientRpc(input, lookDir, moveSpeed);
         }
 
         [ClientRpc]
-        private void BroadcastMovementClientRpc(Vector2 input, Vector2 lookDir)
+        private void BroadcastMovementClientRpc(Vector2 input, Vector2 lookDir, float moveSpeed)
         {
-            if (IsOwner || view == null || model == null)
+            if (IsOwner || view == null)
                 return;
 
-            view.Move(input, model.MoveSpeed, lookDir);
+            view.Move(input, moveSpeed, lookDir);
         }
 
         public PlayerView GetView() => view;
