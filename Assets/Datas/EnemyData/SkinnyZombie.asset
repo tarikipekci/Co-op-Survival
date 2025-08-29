@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: SkinnyZombie
   m_EditorClassIdentifier: 
   health: 3
-  speed: 0.5
+  speed: 0.7
   damage: 1
   attackRate: 1

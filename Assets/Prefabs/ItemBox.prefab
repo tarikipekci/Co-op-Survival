@@ -192,7 +192,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
   maxHealth: 1
-  destroyEffect: {fileID: 0}
+  destroyEffect: {fileID: 4143418557354565836, guid: c55c564e2cda5c94e98be4377f421794, type: 3}
 --- !u!58 &8826321716239081729
 CircleCollider2D:
   m_ObjectHideFlags: 0

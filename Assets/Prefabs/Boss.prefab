@@ -79,12 +79,12 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 4653449010644760439, guid: 024f894c28505a345bd4658cb5ba0e27, type: 3}
+  m_Sprite: {fileID: 5981802871748074552, guid: 8c607197e30159f468251765276a8069, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: 0.5625, y: 0.5625}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -100,7 +100,7 @@ Animator:
   m_GameObject: {fileID: 732478441430549590}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 84633d764e6e66c4b8f802a7ea8fa48c, type: 2}
+  m_Controller: {fileID: 9100000, guid: fcf6edae437827f4e8d14ebd46832f87, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -128,29 +128,29 @@ MonoBehaviour:
   TransitionStateInfoList:
   - IsCrossFadeExit: 0
     Layer: 0
-    OriginatingState: -1799532372
-    DestinationState: -2040717349
+    OriginatingState: -1677791688
+    DestinationState: -1945369437
     TransitionDuration: 0.25
     TriggerNameHash: 1654612129
     TransitionIndex: 3
   - IsCrossFadeExit: 0
     Layer: 0
-    OriginatingState: -1461585597
-    DestinationState: 788289683
+    OriginatingState: 1080991025
+    DestinationState: 1132423376
     TransitionDuration: 0.25
     TriggerNameHash: 1654612129
     TransitionIndex: 3
   - IsCrossFadeExit: 0
     Layer: 0
-    OriginatingState: 528040303
-    DestinationState: -320755176
+    OriginatingState: 749108338
+    DestinationState: -670798008
     TransitionDuration: 0.25
     TriggerNameHash: 1654612129
     TransitionIndex: 3
   - IsCrossFadeExit: 0
     Layer: 0
-    OriginatingState: -522391601
-    DestinationState: -2040717349
+    OriginatingState: -754724142
+    DestinationState: -1945369437
     TransitionDuration: 0.25
     TriggerNameHash: 1654612129
     TransitionIndex: 3
@@ -189,17 +189,17 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: -0.0032653809, y: 0.0047454834}
+  m_Offset: {x: 0.0054016113, y: -0.021316528}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 0.3125, y: 0.5}
-    newSize: {x: 1, y: 1}
+    oldSize: {x: 0.75, y: 0.75}
+    newSize: {x: 0.5625, y: 0.5625}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 0.33868408, y: 0.50949097}
+  m_Size: {x: 0.44647217, y: 0.48513794}
   m_EdgeRadius: 0
 --- !u!1 &3624296893283097346
 GameObject:
@@ -220,7 +220,7 @@ GameObject:
   - component: {fileID: 3450946683990068501}
   - component: {fileID: 2309926618208382634}
   m_Layer: 3
-  m_Name: Enemy
+  m_Name: Boss
   m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -254,7 +254,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 269142128
+  GlobalObjectIdHash: 3798930481
   InScenePlacedSourceGlobalObjectIdHash: 0
   DeferredDespawnTick: 0
   Ownership: 1
@@ -423,7 +423,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
   xpValue: 10
-  isBoss: 0
+  isBoss: 1
 --- !u!114 &2309926618208382634
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -436,7 +436,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3efb6fd1e65e7ba46a39dc7c3571ab7a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  stats: {fileID: 11400000, guid: e8eed48539ef8f9478c6b51b527b5cbd, type: 2}
+  stats: {fileID: 11400000, guid: ea1fa7cf6c3d87d449d5427f383626b1, type: 2}
 --- !u!1 &5255482552725075551
 GameObject:
   m_ObjectHideFlags: 0

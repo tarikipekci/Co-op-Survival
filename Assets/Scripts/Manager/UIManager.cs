@@ -20,7 +20,10 @@ namespace Manager
         private UpgradeUIManager upgradeUIManager;
 
         [Header("XP Bar")] [SerializeField] private Image xpBarImage;
-
+        
+        [Header("Boss Health Bar")] [SerializeField] private Image bossHealthBarImage;
+        [SerializeField] private GameObject bossHealthBarContainer;
+        
         private PlayerHealth playerHealth;
 
         private void Awake()
@@ -36,6 +39,11 @@ namespace Manager
                 XPManager.Instance.OnXPChanged += UpdateXPBar;
 
                 UpdateXPBar(XPManager.Instance.Experience.Value, XPManager.Instance.Experience.Value);
+            }
+
+            if (WaveManager.Instance != null)
+            {
+                WaveManager.Instance.OnBossTakeDamage += UpdateBossHealthBar;
             }
         }
 
@@ -71,6 +79,12 @@ namespace Manager
             xpBarImage.fillAmount = fill;
         }
 
+        private void UpdateBossHealthBar(int currentHealth, int maxHealth)
+        {
+            float fill = (maxHealth <= 0) ? 0 : Mathf.Clamp01((float)currentHealth / maxHealth);
+            bossHealthBarImage.fillAmount = fill;
+        }
+
         public void RegisterPlayerHealth(PlayerHealth health)
         {
             if (playerHealth != null)
@@ -97,11 +111,19 @@ namespace Manager
 
             if (XPManager.Instance != null)
                 XPManager.Instance.OnXPChanged -= UpdateXPBar;
+            
+            if (WaveManager.Instance != null)
+                WaveManager.Instance.OnBossTakeDamage -= UpdateBossHealthBar;
         }
 
         public UpgradeUIManager GetUpgradeUIManager()
         {
             return upgradeUIManager;
+        }
+
+        public void SetBossBarActive(bool isActive)
+        {
+            bossHealthBarContainer.SetActive(isActive);
         }
     }
 }

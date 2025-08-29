@@ -1,10 +1,13 @@
 fileFormatVersion: 2
-guid: eddb577478b50424a8cd251a80e95662
+guid: c5e660d6e910b9c4d8233a2f343b0e4d
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -7060849233326100005
-    second: Zombie-Tileset---_0361_Capa-362_0
+      213: -2264057160791778568
+    second: bossHealthBar_0
+  - first:
+      213: -735425449925869639
+    second: bossHealthBar_1
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -113,13 +116,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Zombie-Tileset---_0361_Capa-362_0
+      name: bossHealthBar_0
       rect:
         serializedVersion: 2
-        x: 0
-        y: 0
-        width: 15
-        height: 13
+        x: 8
+        y: 18
+        width: 92
+        height: 30
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -128,8 +131,30 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: bd132034803d20e90800000000000000
-      internalID: -7060849233326100005
+      spriteID: 8fa93dbf1047490e0800000000000000
+      internalID: -2264057160791778568
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: bossHealthBar_1
+      rect:
+        serializedVersion: 2
+        x: 18
+        y: 2
+        width: 69
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9bff262237e3bc5f0800000000000000
+      internalID: -735425449925869639
       vertices: []
       indices: 
       edges: []
@@ -148,7 +173,8 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      Zombie-Tileset---_0361_Capa-362_0: -7060849233326100005
+      bossHealthBar_0: -2264057160791778568
+      bossHealthBar_1: -735425449925869639
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

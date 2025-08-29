@@ -29,6 +29,11 @@ namespace Enemy
         public void TakeDamageServerRpc(int amount)
         {
             if (!IsServer) return;
+            if (WaveManager.Instance.currentBossHealth == this)
+            {
+                WaveManager.Instance.OnBossTakeDamage?.Invoke(currentHealth.Value, maxHealth);
+                WaveManager.Instance.UpdateBossHealthClientRpc(currentHealth.Value, maxHealth);
+            }
 
             currentHealth.Value -= amount;
 
@@ -40,23 +45,25 @@ namespace Enemy
                 DieClientRpc(); 
             }
         }
-        
+
         [ClientRpc]
         private void DieClientRpc()
         {
             Debug.Log("Enemy died");
             enemyView?.PlayDeathAnimation();
 
+            if (WaveManager.Instance.currentBossHealth == this)
+            {
+                WaveManager.Instance.SetBossBarActiveClientRpc(false); 
+                WaveManager.Instance.currentBossHealth = null;
+            }
+
             if (IsServer)
             {
                 if (NetworkObject.IsSpawned)
-                {
                     NetworkObject.Despawn();
-                }
                 else
-                {
                     Destroy(gameObject);
-                }
             }
         }
 

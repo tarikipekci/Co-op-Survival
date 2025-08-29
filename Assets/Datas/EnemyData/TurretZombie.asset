@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: TurretZombie
   m_EditorClassIdentifier: 
   health: 2
-  speed: 0.1
+  speed: 0.15
   damage: 1
   attackRate: 2
   projectilePrefab: {fileID: 6219810915904028772, guid: 380a8840603c4154892348b22a7b945a, type: 3}

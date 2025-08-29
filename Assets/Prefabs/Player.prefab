@@ -189,7 +189,35 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
-  TransitionStateInfoList: []
+  TransitionStateInfoList:
+  - IsCrossFadeExit: 0
+    Layer: 0
+    OriginatingState: 1881634760
+    DestinationState: 979191568
+    TransitionDuration: 0.25
+    TriggerNameHash: 1654612129
+    TransitionIndex: 3
+  - IsCrossFadeExit: 0
+    Layer: 0
+    OriginatingState: 1636675236
+    DestinationState: 1665283024
+    TransitionDuration: 0.25
+    TriggerNameHash: 1654612129
+    TransitionIndex: 3
+  - IsCrossFadeExit: 0
+    Layer: 0
+    OriginatingState: -697188786
+    DestinationState: 199670135
+    TransitionDuration: 0.25
+    TriggerNameHash: 1654612129
+    TransitionIndex: 3
+  - IsCrossFadeExit: 0
+    Layer: 0
+    OriginatingState: 50413858
+    DestinationState: 979191568
+    TransitionDuration: 0.25
+    TriggerNameHash: 1654612129
+    TransitionIndex: 3
   m_Animator: {fileID: 6886723185208997383}
 --- !u!61 &5211208966328228913
 BoxCollider2D:
@@ -458,6 +486,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   animator: {fileID: 6886723185208997383}
+  spriteRenderer: {fileID: 686537695678800502}
 --- !u!50 &1512943670563995492
 Rigidbody2D:
   serializedVersion: 5
@@ -515,7 +544,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
-  maxHealth: 3
 --- !u!114 &5007870313435234676
 MonoBehaviour:
   m_ObjectHideFlags: 0

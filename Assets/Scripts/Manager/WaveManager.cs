@@ -11,12 +11,28 @@ namespace Manager
 {
     public class WaveManager : NetworkBehaviour
     {
+        public static WaveManager Instance { get; private set; }
+
         [SerializeField] private List<WaveData> waves;
         [SerializeField] private Transform[] enemySpawnPoints;
         [SerializeField] private DayNightManager dayNightManager;
+        [HideInInspector] public EnemyHealth currentBossHealth;
 
         private float timer;
         private bool[] waveStarted;
+
+        public System.Action<int, int> OnBossTakeDamage;
+
+        private void Awake()
+        {
+            if (Instance != null && Instance != this)
+            {
+                Destroy(gameObject);
+                return;
+            }
+
+            Instance = this;
+        }
 
         public override void OnNetworkSpawn()
         {
@@ -63,7 +79,7 @@ namespace Manager
             {
                 for (int i = 0; i < enemy.count; i++)
                 {
-                    SpawnEnemy(enemy.enemyPrefab);
+                    SpawnEnemy(enemy.enemyPrefab, false);
                     yield return new WaitForSeconds(0.3f);
                 }
             }
@@ -73,13 +89,13 @@ namespace Manager
                 yield return new WaitForSeconds(3f);
                 for (int i = 0; i < boss.count; i++)
                 {
-                    SpawnEnemy(boss.enemyPrefab);
+                    SpawnEnemy(boss.enemyPrefab, true);
                     yield return new WaitForSeconds(0.5f);
                 }
             }
         }
 
-        private void SpawnEnemy(GameObject prefab)
+        private void SpawnEnemy(GameObject prefab, bool isBoss)
         {
             Transform spawnPoint = enemySpawnPoints[Random.Range(0, enemySpawnPoints.Length)];
             GameObject enemy = Instantiate(prefab, spawnPoint.position, Quaternion.identity);
@@ -98,15 +114,10 @@ namespace Manager
             var model = new EnemyModel(stats.health, stats.speed, stats.damage, stats.attackRate);
 
             IEnemyBehavior behavior;
-
             if (stats is RangedEnemyStats rangedStats)
-            {
                 behavior = new ChaseAndShoot(rangedStats.projectilePrefab);
-            }
             else
-            {
                 behavior = new ChasePlayer();
-            }
 
             var controller = enemy.GetComponent<EnemyController>();
             controller?.Initialize(model, behavior);
@@ -114,8 +125,27 @@ namespace Manager
             var health = enemy.GetComponent<EnemyHealth>();
             health?.SetMaxHealth(model.Health);
 
+            if (isBoss)
+            {
+                currentBossHealth = health;
+                SetBossBarActiveClientRpc(true);
+            }
+
             var agent = enemy.GetComponent<NavMeshAgent>();
             if (agent != null) agent.enabled = true;
+        }
+
+        [ClientRpc]
+        public void SetBossBarActiveClientRpc(bool isActive)
+        {
+            if (UIManager.Instance != null)
+                UIManager.Instance.SetBossBarActive(isActive);
+        }
+
+        [ClientRpc]
+        public void UpdateBossHealthClientRpc(int currentHealth, int maxHealth)
+        {
+            OnBossTakeDamage?.Invoke(currentHealth, maxHealth);
         }
     }
 }
