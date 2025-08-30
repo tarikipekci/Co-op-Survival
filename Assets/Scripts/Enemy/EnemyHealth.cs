@@ -19,58 +19,65 @@ namespace Enemy
             currentHealth.OnValueChanged += (oldVal, newVal) =>
             {
                 if (newVal < oldVal)
-                {
                     enemyView?.PlayHitEffect();
-                }
             };
+        }
+
+        public void InitializeHealth(int health)
+        {
+            maxHealth = health;
+
+            if (NetworkObject != null && NetworkObject.IsSpawned)
+            {
+                currentHealth.Value = maxHealth;
+            }
+            else
+            {
+                StartCoroutine(SetHealthAfterSpawn());
+            }
+        }
+
+        private System.Collections.IEnumerator SetHealthAfterSpawn()
+        {
+            yield return new WaitUntil(() => NetworkObject != null && NetworkObject.IsSpawned);
+            currentHealth.Value = maxHealth;
         }
 
         [ServerRpc(RequireOwnership = false)]
         public void TakeDamageServerRpc(int amount)
         {
             if (!IsServer) return;
+
+            currentHealth.Value -= amount;
+
             if (WaveManager.Instance.currentBossHealth == this)
             {
                 WaveManager.Instance.OnBossTakeDamage?.Invoke(currentHealth.Value, maxHealth);
                 WaveManager.Instance.UpdateBossHealthClientRpc(currentHealth.Value, maxHealth);
             }
 
-            currentHealth.Value -= amount;
-
-            Debug.Log($"Enemy took {amount} damage, remaining {currentHealth.Value}");
-
             if (currentHealth.Value <= 0)
             {
                 XPManager.Instance.SpawnXPPickupDelayed(transform.position, xpValue);
-                DieClientRpc(); 
+                Die();
             }
+        }
+
+        private void Die()
+        {
+            if (!IsServer) return;
+
+            if (WaveManager.Instance.currentBossHealth == this)
+                WaveManager.Instance.currentBossHealth = null;
+
+            NetworkPoolManager.Instance.Despawn(NetworkObject);
+            PlayDeathClientRpc();
         }
 
         [ClientRpc]
-        private void DieClientRpc()
+        private void PlayDeathClientRpc()
         {
-            Debug.Log("Enemy died");
             enemyView?.PlayDeathAnimation();
-
-            if (WaveManager.Instance.currentBossHealth == this)
-            {
-                WaveManager.Instance.SetBossBarActiveClientRpc(false); 
-                WaveManager.Instance.currentBossHealth = null;
-            }
-
-            if (IsServer)
-            {
-                if (NetworkObject.IsSpawned)
-                    NetworkObject.Despawn();
-                else
-                    Destroy(gameObject);
-            }
-        }
-
-        public void SetMaxHealth(int value)
-        {
-            maxHealth = value;
-            currentHealth.Value = maxHealth;
         }
     }
 }

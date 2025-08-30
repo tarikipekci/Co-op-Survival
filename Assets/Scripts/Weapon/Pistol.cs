@@ -1,5 +1,6 @@
 using UnityEngine;
 using Unity.Netcode;
+using Manager;
 
 namespace Weapon
 {
@@ -13,7 +14,7 @@ namespace Weapon
             if (!IsCooldownOver()) return;
             base.Attack();
             lastAttackTime = Time.time;
-            
+
             Vector2 direction = transform.right;
             int totalDamage = Mathf.RoundToInt(weaponData.Damage * playerData.Damage.Value);
             ShootServerRpc(firePoint.position, direction, totalDamage);
@@ -22,18 +23,18 @@ namespace Weapon
         [ServerRpc(RequireOwnership = false)]
         private void ShootServerRpc(Vector2 spawnPosition, Vector2 direction, int damage)
         {
-            GameObject proj = Instantiate(projectilePrefab, spawnPosition, Quaternion.identity);
-            var netObj = proj.GetComponent<NetworkObject>();
-            var projectile = proj.GetComponent<Projectile>();
+            if (NetworkPoolManager.Instance == null) return;
 
-            if (netObj != null && projectile != null)
+            var projObj = NetworkPoolManager.Instance.Spawn(projectilePrefab, spawnPosition, Quaternion.identity);
+            var projectile = projObj.GetComponent<Projectile>();
+
+            if (projectile != null)
             {
-                netObj.Spawn(true);
                 projectile.Init(direction, ProjectileOwner.Player, damage);
             }
             else
             {
-                Destroy(proj);
+                NetworkPoolManager.Instance.Despawn(projObj.GetComponent<NetworkObject>());
             }
         }
     }

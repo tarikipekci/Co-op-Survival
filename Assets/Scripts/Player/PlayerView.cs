@@ -15,19 +15,22 @@ namespace Player
         private SpriteRenderer spriteRenderer;
         private Rigidbody2D rb;
         private WeaponManager weaponManager;
-        private PlayerFlashlightController _playerFlashlightController;
+        private PlayerFlashlightController flashlightController;
+
+        private Vector2 prevAnimValues = Vector2.zero;
+        private float prevSpeed;
 
         private void Awake()
         {
             spriteRenderer = GetComponentInChildren<SpriteRenderer>();
             rb = GetComponent<Rigidbody2D>();
             weaponManager = GetComponentInChildren<WeaponManager>();
-            _playerFlashlightController = GetComponent<PlayerFlashlightController>();
+            flashlightController = GetComponent<PlayerFlashlightController>();
 
             if (spriteRenderer == null) Debug.LogError("SpriteRenderer not found!");
             if (rb == null) Debug.LogError("Rigidbody2D not found!");
             if (weaponManager == null) Debug.LogError("WeaponManager not found!");
-            if (_playerFlashlightController == null) Debug.LogError("PlayerFlashlightController not found!");
+            if (flashlightController == null) Debug.LogError("PlayerFlashlightController not found!");
             if (animator == null) Debug.LogError("Animator not found!");
         }
 
@@ -45,17 +48,31 @@ namespace Player
 
             if (animator != null)
             {
-                if (rb != null && rb.linearVelocity.sqrMagnitude > 0.1f)
+                bool isMoving = direction.sqrMagnitude > 0.01f; 
+
+                if (isMoving)
                 {
-                    animator.SetFloat(MoveX, Mathf.Abs(lookDir.x));
-                    animator.SetFloat(MoveY, lookDir.y);
-                    animator.SetFloat(Speed, direction.sqrMagnitude);
+                    Vector2 animValues = new Vector2(Mathf.Abs(lookDir.x), lookDir.y);
+                    float speedValue = direction.sqrMagnitude;
+
+                    if ((animValues - prevAnimValues).sqrMagnitude > 0.01f || Mathf.Abs(speedValue - prevSpeed) > 0.01f)
+                    {
+                        animator.SetFloat(MoveX, animValues.x);
+                        animator.SetFloat(MoveY, animValues.y);
+                        animator.SetFloat(Speed, speedValue);
+
+                        prevAnimValues = animValues;
+                        prevSpeed = speedValue;
+                    }
                 }
                 else
                 {
                     animator.SetFloat(MoveX, 0);
                     animator.SetFloat(MoveY, 0);
                     animator.SetFloat(Speed, 0);
+
+                    prevAnimValues = Vector2.zero;
+                    prevSpeed = 0f;
                 }
             }
 
@@ -63,23 +80,18 @@ namespace Player
             {
                 var weapon = weaponManager.GetCurrentWeapon();
                 if (weapon != null)
-                {
                     weapon.SetLookDirection(lookDir, weaponManager.NetworkObject.NetworkObjectId);
-                }
             }
 
-            if (_playerFlashlightController != null)
+            if (flashlightController != null)
             {
-                _playerFlashlightController.UpdateLookDirection(lookDir);
+                flashlightController.UpdateLookDirection(lookDir);
             }
         }
 
         private void PlayHitEffect()
         {
-            if (animator != null)
-            {
-                animator.SetTrigger(Hit);
-            }
+            if (animator != null) animator.SetTrigger(Hit);
         }
 
         [ClientRpc]

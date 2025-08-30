@@ -1,5 +1,6 @@
 using Unity.Netcode;
 using UnityEngine;
+using Manager;
 
 namespace Weapon
 {
@@ -22,6 +23,7 @@ namespace Weapon
                 Vector2 baseDirection = transform.right;
                 Vector2 spreadDirection = Quaternion.Euler(0, 0, angleOffset) * baseDirection;
                 int totalDamage = Mathf.RoundToInt(weaponData.Damage * playerData.Damage.Value);
+
                 ShootServerRpc(firePoint.position, spreadDirection, totalDamage);
             }
         }
@@ -29,18 +31,20 @@ namespace Weapon
         [ServerRpc(RequireOwnership = false)]
         private void ShootServerRpc(Vector2 spawnPosition, Vector2 direction, int damage)
         {
-            GameObject proj = Instantiate(projectilePrefab, spawnPosition, Quaternion.identity);
-            var netObj = proj.GetComponent<NetworkObject>();
-            var projectile = proj.GetComponent<Projectile>();
+            if (NetworkPoolManager.Instance == null) return;
 
-            if (netObj != null && projectile != null)
+            var netObj = NetworkPoolManager.Instance.Spawn(projectilePrefab, spawnPosition, Quaternion.identity);
+            if (netObj != null)
             {
-                netObj.Spawn(true);
-                projectile.Init(direction, ProjectileOwner.Player, damage);
-            }
-            else
-            {
-                Destroy(proj);
+                var projectile = netObj.GetComponent<Projectile>();
+                if (projectile != null)
+                {
+                    projectile.Init(direction, ProjectileOwner.Player, damage);
+                }
+                else
+                {
+                    NetworkPoolManager.Instance.Despawn(netObj);
+                }
             }
         }
     }

@@ -608,7 +608,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
   waves:
-  - startTime: 0
+  - startTime: 5
     baseEnemies:
     - enemyPrefab: {fileID: 3624296893283097346, guid: 338bbe4724ee4004480fa6fec9154fb3, type: 3}
       count: 12
@@ -96783,6 +96783,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cameraPrefab: {fileID: 4839199950857426249, guid: 8439a824c8ea4114085e5bb17211d4bb, type: 3}
   playerPrefab: {fileID: 8453596009777159533, guid: b657abcce02e2b544876707fa3944aa0, type: 3}
+  skinnyZombiePrefab: {fileID: 3624296893283097346, guid: 338bbe4724ee4004480fa6fec9154fb3, type: 3}
+  babyZombiePrefab: {fileID: 3624296893283097346, guid: 67cf67bf2d325934bb4e88fe5ebe91bc, type: 3}
+  bigZombiePrefab: {fileID: 3624296893283097346, guid: 0d44d43ed62334240b9abba95cf029db, type: 3}
+  turretZombiePrefab: {fileID: 3624296893283097346, guid: ceab5bfeb5f692a44b1378633e124c64, type: 3}
+  bossZombiePrefab: {fileID: 3624296893283097346, guid: 4d75dc5d11738e94aa889828730cd705, type: 3}
+  playerBulletPrefab: {fileID: 6219810915904028772, guid: baae1790c5f9f764582311332ff62976, type: 3}
+  enemyProjectilePrefab: {fileID: 6219810915904028772, guid: 380a8840603c4154892348b22a7b945a, type: 3}
 --- !u!4 &1031171167
 Transform:
   m_ObjectHideFlags: 0
@@ -97355,6 +97362,77 @@ Grid:
   m_CellGap: {x: 0, y: 0, z: 0}
   m_CellLayout: 0
   m_CellSwizzle: 0
+--- !u!1 &1411022247
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1411022250}
+  - component: {fileID: 1411022248}
+  - component: {fileID: 1411022249}
+  m_Layer: 0
+  m_Name: NetworkPoolManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1411022248
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1411022247}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GlobalObjectIdHash: 966797812
+  InScenePlacedSourceGlobalObjectIdHash: 0
+  DeferredDespawnTick: 0
+  Ownership: 1
+  AlwaysReplicateAsRoot: 0
+  SynchronizeTransform: 1
+  ActiveSceneSynchronization: 0
+  SceneMigrationSynchronization: 0
+  SpawnWithObservers: 1
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 1
+  SyncOwnerTransformWhenParented: 1
+  AllowOwnerToParent: 0
+--- !u!114 &1411022249
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1411022247}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cb12f81238555e847b6b07b287f2c3ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
+--- !u!4 &1411022250
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1411022247}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 6.8514, y: -7.44078, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1456799086
 GameObject:
   m_ObjectHideFlags: 0
@@ -98827,3 +98905,4 @@ SceneRoots:
   - {fileID: 1936243081}
   - {fileID: 1184108709}
   - {fileID: 1481358885}
+  - {fileID: 1411022250}

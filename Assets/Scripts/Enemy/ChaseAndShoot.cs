@@ -1,5 +1,4 @@
 using Interface;
-using Player;
 using UnityEngine;
 
 namespace Enemy
@@ -19,13 +18,12 @@ namespace Enemy
         {
             if (controller == null) return;
 
-            PlayerController playerController = controller.FindClosestPlayerController();
-            if (playerController == null) return;
+            controller.UpdateTarget();
+            if (controller.GetCachedTarget() == null) return;
 
-            Transform target = playerController.transform;
-            Vector2 dir = (target.position - controller.transform.position).normalized;
+            Transform target = controller.GetCachedTarget().transform;
 
-            controller.Move(dir);
+            controller.Move();
 
             float distance = Vector2.Distance(controller.transform.position, target.position);
 
@@ -34,12 +32,12 @@ namespace Enemy
                 if (Time.time - lastShootTime >= shootCooldown)
                 {
                     lastShootTime = Time.time;
-                    controller.ShootProjectile(target.position, projectilePrefab, playerController);
+                    controller.ShootProjectile(target.position, projectilePrefab);
                 }
             }
             else
             {
-                controller.TryAttack(target, playerController);
+                controller.TryAttack(target, controller.GetCachedTarget());
             }
         }
     }

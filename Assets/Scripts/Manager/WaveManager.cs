@@ -16,10 +16,10 @@ namespace Manager
         [SerializeField] private List<WaveData> waves;
         [SerializeField] private Transform[] enemySpawnPoints;
         [SerializeField] private DayNightManager dayNightManager;
-        [HideInInspector] public EnemyHealth currentBossHealth;
 
-        private float timer;
+        [HideInInspector] public EnemyHealth currentBossHealth;
         private bool[] waveStarted;
+        private float timer;
 
         public System.Action<int, int> OnBossTakeDamage;
 
@@ -30,14 +30,12 @@ namespace Manager
                 Destroy(gameObject);
                 return;
             }
-
             Instance = this;
         }
 
         public override void OnNetworkSpawn()
         {
             if (!IsServer) return;
-
             waveStarted = new bool[waves.Count];
             timer = 0f;
         }
@@ -54,8 +52,6 @@ namespace Manager
                 {
                     waveStarted[i] = true;
                     StartCoroutine(RunWave(waves[i]));
-                    Debug.Log($"[WaveManager] Wave {i + 1} started at {Mathf.FloorToInt(timer)}s");
-
                     HandleNightTransition(waves[i].isNight);
                 }
             }
@@ -63,10 +59,8 @@ namespace Manager
 
         private void HandleNightTransition(bool isNight)
         {
-            if (isNight)
-                dayNightManager.SetNight();
-            else
-                dayNightManager.SetDay();
+            if (isNight) dayNightManager.SetNight();
+            else dayNightManager.SetDay();
         }
 
         private IEnumerator RunWave(WaveData wave)
@@ -79,7 +73,7 @@ namespace Manager
             {
                 for (int i = 0; i < enemy.count; i++)
                 {
-                    SpawnEnemy(enemy.enemyPrefab, false);
+                    SpawnEnemyFromPool(enemy.enemyPrefab, false);
                     yield return new WaitForSeconds(0.3f);
                 }
             }
@@ -89,21 +83,18 @@ namespace Manager
                 yield return new WaitForSeconds(3f);
                 for (int i = 0; i < boss.count; i++)
                 {
-                    SpawnEnemy(boss.enemyPrefab, true);
+                    SpawnEnemyFromPool(boss.enemyPrefab, true);
                     yield return new WaitForSeconds(0.5f);
                 }
             }
         }
 
-        private void SpawnEnemy(GameObject prefab, bool isBoss)
+        private void SpawnEnemyFromPool(GameObject prefab, bool isBoss)
         {
             Transform spawnPoint = enemySpawnPoints[Random.Range(0, enemySpawnPoints.Length)];
-            GameObject enemy = Instantiate(prefab, spawnPoint.position, Quaternion.identity);
+            var enemyObj = NetworkPoolManager.Instance.Spawn(prefab, spawnPoint.position, Quaternion.identity);
 
-            var netObj = enemy.GetComponent<NetworkObject>();
-            if (netObj != null) netObj.Spawn();
-
-            var data = enemy.GetComponent<EnemyData>();
+            var data = enemyObj.GetComponent<EnemyData>();
             if (data == null || data.stats == null)
             {
                 Debug.LogError("Enemy prefab does not contain EnemyData or stats is not assigned.");
@@ -113,17 +104,15 @@ namespace Manager
             var stats = data.stats;
             var model = new EnemyModel(stats.health, stats.speed, stats.damage, stats.attackRate);
 
-            IEnemyBehavior behavior;
-            if (stats is RangedEnemyStats rangedStats)
-                behavior = new ChaseAndShoot(rangedStats.projectilePrefab);
-            else
-                behavior = new ChasePlayer();
+            IEnemyBehavior behavior = stats is RangedEnemyStats rangedStats
+                ? new ChaseAndShoot(rangedStats.projectilePrefab)
+                : new ChasePlayer();
 
-            var controller = enemy.GetComponent<EnemyController>();
+            var controller = enemyObj.GetComponent<EnemyController>();
             controller?.Initialize(model, behavior);
 
-            var health = enemy.GetComponent<EnemyHealth>();
-            health?.SetMaxHealth(model.Health);
+            var health = enemyObj.GetComponent<EnemyHealth>();
+            health?.InitializeHealth(model.Health); 
 
             if (isBoss)
             {
@@ -131,7 +120,7 @@ namespace Manager
                 SetBossBarActiveClientRpc(true);
             }
 
-            var agent = enemy.GetComponent<NavMeshAgent>();
+            var agent = enemyObj.GetComponent<NavMeshAgent>();
             if (agent != null) agent.enabled = true;
         }
 

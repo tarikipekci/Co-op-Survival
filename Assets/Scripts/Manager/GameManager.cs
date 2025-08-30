@@ -9,8 +9,20 @@ namespace Manager
     {
         public static GameManager Instance { get; private set; }
 
+        [Header("Player & Camera")]
         [SerializeField] private GameObject cameraPrefab;
         [SerializeField] private GameObject playerPrefab;
+
+        [Header("Enemies for Pooling")]
+        [SerializeField] private GameObject skinnyZombiePrefab;
+        [SerializeField] private GameObject babyZombiePrefab;
+        [SerializeField] private GameObject bigZombiePrefab;
+        [SerializeField] private GameObject turretZombiePrefab;
+        [SerializeField] private GameObject bossZombiePrefab;
+
+        [Header("Projectiles for Pooling")]
+        [SerializeField] private GameObject playerBulletPrefab;
+        [SerializeField] private GameObject enemyProjectilePrefab;
 
         private Camera _camera;
 
@@ -34,6 +46,11 @@ namespace Manager
             }
         }
 
+        private void Start()
+        {
+            PreloadPools();
+        }
+
         private void OnDestroy()
         {
             SceneManager.sceneLoaded -= OnSceneLoaded;
@@ -42,6 +59,37 @@ namespace Manager
             {
                 NetworkManager.Singleton.OnClientConnectedCallback -= OnClientConnected;
             }
+        }
+
+        #region Pool Preload
+        private void PreloadPools()
+        {
+            if (NetworkPoolManager.Instance == null) return;
+
+            // Enemies
+            NetworkPoolManager.Instance.Preload(skinnyZombiePrefab, 50);
+            NetworkPoolManager.Instance.Preload(babyZombiePrefab, 50);
+            NetworkPoolManager.Instance.Preload(bigZombiePrefab, 15);
+            NetworkPoolManager.Instance.Preload(turretZombiePrefab, 20);
+            NetworkPoolManager.Instance.Preload(bossZombiePrefab, 1);
+
+            // Projectiles
+            NetworkPoolManager.Instance.Preload(playerBulletPrefab, 50);
+            NetworkPoolManager.Instance.Preload(enemyProjectilePrefab, 50);
+
+            Debug.Log("[GameManager] All prefabs preloaded in NetworkPoolManager");
+        }
+        #endregion
+
+        #region Camera & Player
+        private void SpawnCameraOnce()
+        
+        {
+            if (_camera != null) return;
+
+            GameObject cam = Instantiate(cameraPrefab);
+            _camera = cam.GetComponent<Camera>();
+            DontDestroyOnLoad(cam);
         }
 
         private void OnClientConnected(ulong clientId)
@@ -71,15 +119,6 @@ namespace Manager
             }
         }
 
-        private void SpawnCameraOnce()
-        {
-            if (_camera != null) return;
-
-            GameObject cam = Instantiate(cameraPrefab);
-            _camera = cam.GetComponent<Camera>();
-            DontDestroyOnLoad(cam);
-        }
-
         private void SpawnPlayerForClient(ulong clientId)
         {
             NetworkObject playerObject = NetworkManager.Singleton.SpawnManager.GetPlayerNetworkObject(clientId);
@@ -96,7 +135,6 @@ namespace Manager
             }
         }
 
-
         public Camera GetCamera()
         {
             return _camera;
@@ -109,5 +147,6 @@ namespace Manager
                 cameraFollow.Follow(playerTransform);
             }
         }
+        #endregion
     }
 }

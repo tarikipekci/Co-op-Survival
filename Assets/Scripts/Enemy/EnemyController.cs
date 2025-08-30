@@ -1,4 +1,5 @@
 using Interface;
+using Manager;
 using Player;
 using UnityEngine;
 using Unity.Netcode;
@@ -15,14 +16,18 @@ namespace Enemy
         private IEnemyBehavior behavior;
         private NavMeshAgent agent;
         private float lastAttackTime;
+        private Vector3 lastSentDirection;
+        private PlayerController cachedTarget;
+        private float targetUpdateTime;
+        private const float targetUpdateInterval = 0.3f;
+        private const float directionThreshold = 0.25f;
+        private Vector3 lastTargetPos;
 
-        public NetworkVariable<Vector2> NetworkDirection = new NetworkVariable<Vector2>(
-            Vector2.zero);
+        public NetworkVariable<Vector2> NetworkDirection = new NetworkVariable<Vector2>(Vector2.zero);
 
         public override void OnNetworkSpawn()
         {
             view = GetComponent<EnemyView>();
-
             if (IsClient)
             {
                 NetworkDirection.OnValueChanged += OnDirectionChanged;
@@ -39,20 +44,31 @@ namespace Enemy
             agent.speed = model.Speed;
         }
 
-        private void FixedUpdate()
+        private void Update()
         {
             if (!IsServer) return;
-
             behavior?.Execute(this);
         }
 
-        public void Move(Vector2 direction)
+        public void Move()
         {
-            var closestPlayerController = FindClosestPlayerController();
+            UpdateTarget();
+            if (cachedTarget == null) return;
 
-            model.target = closestPlayerController.transform;
-            agent.SetDestination(model.target.position);
-            NetworkDirection.Value = direction;
+            Vector3 currentTargetPos = cachedTarget.transform.position;
+            Vector3 direction = (currentTargetPos - transform.position).normalized;
+
+            if ((lastSentDirection - direction).sqrMagnitude > directionThreshold * directionThreshold)
+            {
+                lastSentDirection = direction;
+                NetworkDirection.Value = new Vector2(direction.x, direction.y);
+            }
+
+            if (agent.remainingDistance < 0.1f || (lastTargetPos - currentTargetPos).sqrMagnitude > 0.01f)
+            {
+                agent.SetDestination(currentTargetPos);
+                lastTargetPos = currentTargetPos;
+            }
         }
 
         private void OnDirectionChanged(Vector2 previous, Vector2 current)
@@ -62,35 +78,37 @@ namespace Enemy
 
         public void TryAttack(Transform target, PlayerController playerController)
         {
-            if (!IsServer) return; 
+            if (!IsServer) return;
+            float distSqr = (target.position - transform.position).sqrMagnitude;
+            if (Time.time - lastAttackTime < model.AttackRate || distSqr > 0.36f) return;
 
-            if (Time.time - lastAttackTime < model.AttackRate) return;
+            lastAttackTime = Time.time;
+            PlayAttackAnimationClientRpc();
 
-            float dist = Vector2.Distance(transform.position, target.position);
-            if (dist <= 0.6f)
-            {
-                lastAttackTime = Time.time;
-
-                PlayAttackAnimationClientRpc();
-                
-                playerController.GetComponent<PlayerHealth>().TakeDamageServerRpc(model.Damage);
-
-                playerController.GetView().PlayHitEffectClientRpc();
-            }
+            playerController.GetComponent<PlayerHealth>().TakeDamageServerRpc(model.Damage);
+            playerController.GetView().PlayHitEffectClientRpc();
         }
 
-        public void ShootProjectile(Vector3 targetPosition, GameObject projectilePrefab,
-            PlayerController playerController)
+        public void ShootProjectile(Vector3 targetPosition, GameObject projectilePrefab)
         {
             if (!IsServer) return;
 
             Vector3 spawnPos = transform.position + (targetPosition - transform.position).normalized * 0.5f;
-            GameObject projectile = Instantiate(projectilePrefab, spawnPos, Quaternion.identity);
 
-            projectile.GetComponent<NetworkObject>().Spawn();
-
-            var dir = (targetPosition - spawnPos).normalized;
-            projectile.GetComponent<Projectile>().Init(dir, ProjectileOwner.Enemy, model.Damage);
+            var netObj = NetworkPoolManager.Instance.Spawn(projectilePrefab, spawnPos, Quaternion.identity);
+            if (netObj != null)
+            {
+                var projectile = netObj.GetComponent<Projectile>();
+                if (projectile != null)
+                {
+                    Vector3 dir = (targetPosition - spawnPos).normalized;
+                    projectile.Init(dir, ProjectileOwner.Enemy, model.Damage);
+                }
+                else
+                {
+                    NetworkPoolManager.Instance.Despawn(netObj);
+                }
+            }
         }
 
         [ClientRpc]
@@ -98,32 +116,41 @@ namespace Enemy
         {
             view.PlayAttackAnimation();
         }
-        
-        public PlayerController FindClosestPlayerController()
+
+        public void UpdateTarget()
         {
+            if (Time.time - targetUpdateTime < targetUpdateInterval) return;
+            targetUpdateTime = Time.time;
+
             float minDist = float.MaxValue;
             PlayerController closestController = null;
 
-            foreach (var client in NetworkManager.Singleton.ConnectedClientsList)
+            var clients = NetworkManager.Singleton.ConnectedClientsList;
+            foreach (var t in clients)
             {
-                var obj = client.PlayerObject;
+                var obj = t.PlayerObject;
                 if (obj == null) continue;
 
-                float dist = Vector2.Distance(transform.position, obj.transform.position);
-                if (dist < minDist)
+                float distSqr = (obj.transform.position - transform.position).sqrMagnitude;
+                if (distSqr < minDist)
                 {
-                    minDist = dist;
+                    minDist = distSqr;
                     closestController = obj.GetComponent<PlayerController>();
                 }
             }
 
-            return closestController;
+            cachedTarget = closestController;
         }
-        
+
         public override void OnDestroy()
         {
             if (IsClient)
                 NetworkDirection.OnValueChanged -= OnDirectionChanged;
+        }
+
+        public PlayerController GetCachedTarget()
+        {
+            return cachedTarget;
         }
     }
 }

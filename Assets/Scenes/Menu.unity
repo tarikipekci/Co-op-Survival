@@ -1210,6 +1210,7 @@ MonoBehaviour:
   maxPlayersInput: {fileID: 2104319637}
   joinCodeInput: {fileID: 1834578569}
   createdLobbyCodeText: {fileID: 1399350585}
+  logText: {fileID: 0}
 --- !u!4 &299051292
 Transform:
   m_ObjectHideFlags: 0

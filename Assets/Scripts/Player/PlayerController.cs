@@ -13,6 +13,13 @@ namespace Player
         private Camera _camera;
         private PlayerData playerData;
 
+        private Vector2 moveInput;
+        private Vector2 lookDir;
+        private Vector2 lastSentLookDir;
+
+        private float movementTimer;
+        private const float movementSendInterval = 0.05f;
+
         public NetworkVariable<Vector2> LookDirection = new(writePerm: NetworkVariableWritePermission.Owner);
 
         [SerializeField] private GameObject cameraPrefab;
@@ -28,13 +35,11 @@ namespace Player
         {
             if (PlayerDataManager.Instance == null || PlayerDataManager.Instance.GetOrCreatePlayerData(OwnerClientId) == null)
             {
-                Debug.Log($"[PlayerController] Player Data is not ready yet! Waiting... (ClientId: {OwnerClientId})");
                 StartCoroutine(WaitForPlayerData());
                 return;
             }
 
-            playerData = PlayerDataManager.Instance.GetOrCreatePlayerData(OwnerClientId);
-            SetPlayerData(playerData);
+            InitializePlayerData();
         }
 
         private IEnumerator WaitForPlayerData()
@@ -44,78 +49,69 @@ namespace Player
                 PlayerDataManager.Instance.GetOrCreatePlayerData(OwnerClientId) != null
             );
 
+            InitializePlayerData();
+        }
+
+        private void InitializePlayerData()
+        {
             playerData = PlayerDataManager.Instance.GetOrCreatePlayerData(OwnerClientId);
-            SetPlayerData(playerData);
-        }
-
-        private void FixedUpdate()
-        {
-            if (!IsOwner || _camera == null || playerData == null)
-                return;
-
-            Vector2 moveInput = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical")).normalized;
-
-            Vector3 mouseWorldPos = _camera.ScreenToWorldPoint(Input.mousePosition);
-            mouseWorldPos.z = 0;
-            Vector2 lookDir = (mouseWorldPos - transform.position).normalized;
-
-            LookDirection.Value = lookDir;
-
-            view.Move(moveInput, model.MoveSpeed, lookDir);
-
-            SubmitMovementServerRpc(moveInput, lookDir, model.MoveSpeed);
-        }
-
-        [ServerRpc]
-        private void SubmitMovementServerRpc(Vector2 input, Vector2 lookDir, float moveSpeed)
-        {
-            if (model == null)
-            {
-                Debug.LogWarning($"[SERVER] model is null on SubmitMovementServerRpc for client {OwnerClientId}");
-                return;
-            }
-
-            BroadcastMovementClientRpc(input, lookDir, moveSpeed);
-        }
-
-        [ClientRpc]
-        private void BroadcastMovementClientRpc(Vector2 input, Vector2 lookDir, float moveSpeed)
-        {
-            if (IsOwner || view == null)
-                return;
-
-            view.Move(input, moveSpeed, lookDir);
-        }
-
-        public PlayerView GetView() => view;
-
-        private void SetPlayerData(PlayerData newPlayerData)
-        {
-            if (newPlayerData == null)
-            {
-                Debug.LogError($"PlayerData for client {OwnerClientId} not found!");
-                return;
-            }
-
-            model = new PlayerModel(newPlayerData);
+            model = new PlayerModel(playerData);
 
             var health = GetComponent<PlayerHealth>();
             if (health != null)
-                health.InitializeHealth(model.MaxHealth
-                );
-            else
-                Debug.LogError("PlayerHealth component not found!");
+                health.InitializeHealth(model.MaxHealth);
 
             if (IsOwner)
             {
                 GameManager.Instance.AssignCameraToPlayer(transform);
                 _camera = GameManager.Instance.GetCamera();
-
                 if (_camera == null)
                     Debug.LogError("Camera could not be assigned!");
             }
-
-            Debug.Log($"[PlayerController] Player Data is ready (ClientId: {OwnerClientId})");
         }
+
+        private void Update()
+        {
+            if (!IsOwner || playerData == null || _camera == null) return;
+
+            moveInput.Set(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
+            moveInput.Normalize();
+
+            Vector3 mouseWorldPos = _camera.ScreenToWorldPoint(Input.mousePosition);
+            mouseWorldPos.z = 0;
+            lookDir.Set(mouseWorldPos.x - transform.position.x, mouseWorldPos.y - transform.position.y);
+            lookDir.Normalize();
+
+            if ((lastSentLookDir - lookDir).sqrMagnitude > 0.05f)
+            {
+                lastSentLookDir = lookDir;
+                LookDirection.Value = lookDir;
+            }
+
+            view.Move(moveInput, model.MoveSpeed, lookDir);
+
+            movementTimer += Time.deltaTime;
+            if (movementTimer >= movementSendInterval)
+            {
+                movementTimer = 0;
+                SubmitMovementServerRpc(moveInput, lookDir, model.MoveSpeed);
+            }
+        }
+
+        [ServerRpc]
+        private void SubmitMovementServerRpc(Vector2 input, Vector2 lookDirection, float moveSpeed)
+        {
+            if (model == null) return;
+            BroadcastMovementClientRpc(input, lookDirection, moveSpeed);
+        }
+
+        [ClientRpc]
+        private void BroadcastMovementClientRpc(Vector2 input, Vector2 lookDirection, float moveSpeed)
+        {
+            if (IsOwner) return;
+            view.Move(input, moveSpeed, lookDirection);
+        }
+
+        public PlayerView GetView() => view;
     }
 }
