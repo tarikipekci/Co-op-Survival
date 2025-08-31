@@ -1,92 +1,81 @@
 using Manager;
-using Unity.Netcode;
 using UnityEngine;
+using Unity.Netcode;
 
 namespace Player
 {
     public class PlayerView : MonoBehaviour
     {
-        private static readonly int MoveX = Animator.StringToHash("MoveX");
-        private static readonly int MoveY = Animator.StringToHash("MoveY");
-        private static readonly int Speed = Animator.StringToHash("Speed");
-        private static readonly int Hit = Animator.StringToHash("Hit");
-
         [SerializeField] private Animator animator;
         private SpriteRenderer spriteRenderer;
         private Rigidbody2D rb;
         private WeaponManager weaponManager;
         private PlayerFlashlightController flashlightController;
 
-        private Vector2 prevAnimValues = Vector2.zero;
-        private float prevSpeed;
+        private Vector2 targetLookDir;
+        private Vector2 smoothLookDir;
+
+        private static readonly int MoveX = Animator.StringToHash("MoveX");
+        private static readonly int MoveY = Animator.StringToHash("MoveY");
+        private static readonly int Speed = Animator.StringToHash("Speed");
+        private static readonly int Hit = Animator.StringToHash("Hit");
 
         private void Awake()
         {
-            spriteRenderer = GetComponentInChildren<SpriteRenderer>();
             rb = GetComponent<Rigidbody2D>();
+            spriteRenderer = GetComponentInChildren<SpriteRenderer>();
             weaponManager = GetComponentInChildren<WeaponManager>();
             flashlightController = GetComponent<PlayerFlashlightController>();
-
-            if (spriteRenderer == null) Debug.LogError("SpriteRenderer not found!");
-            if (rb == null) Debug.LogError("Rigidbody2D not found!");
-            if (weaponManager == null) Debug.LogError("WeaponManager not found!");
-            if (flashlightController == null) Debug.LogError("PlayerFlashlightController not found!");
-            if (animator == null) Debug.LogError("Animator not found!");
         }
 
-        public void Move(Vector2 direction, float speed, Vector2 lookDir)
+        private void Start()
         {
-            if (rb != null)
+            PlayerController controller = GetComponent<PlayerController>();
+            if (controller != null && !controller.IsOwner)
             {
-                rb.linearVelocity = direction * speed;
+                controller.LookDir.OnValueChanged += (oldVal, newVal) =>
+                {
+                    if (oldVal != newVal)
+                        targetLookDir = newVal;
+                };
             }
+        }
 
-            if (spriteRenderer != null && Mathf.Abs(lookDir.x) > 0.01f)
-            {
-                spriteRenderer.flipX = lookDir.x < 0;
-            }
+        public void UpdateLookDirection(Vector2 lookDir, Vector2 moveInput)
+        {
+            smoothLookDir = lookDir;
+
+            if (spriteRenderer != null && Mathf.Abs(smoothLookDir.x) > 0.01f)
+                spriteRenderer.flipX = smoothLookDir.x < 0;
 
             if (animator != null)
             {
-                bool isMoving = direction.sqrMagnitude > 0.01f; 
-
-                if (isMoving)
+                float speed = moveInput.sqrMagnitude;
+                if (speed > 0.01f)
                 {
-                    Vector2 animValues = new Vector2(Mathf.Abs(lookDir.x), lookDir.y);
-                    float speedValue = direction.sqrMagnitude;
-
-                    if ((animValues - prevAnimValues).sqrMagnitude > 0.01f || Mathf.Abs(speedValue - prevSpeed) > 0.01f)
-                    {
-                        animator.SetFloat(MoveX, animValues.x);
-                        animator.SetFloat(MoveY, animValues.y);
-                        animator.SetFloat(Speed, speedValue);
-
-                        prevAnimValues = animValues;
-                        prevSpeed = speedValue;
-                    }
+                    animator.SetFloat(MoveX, Mathf.Abs(smoothLookDir.x));
+                    animator.SetFloat(MoveY, smoothLookDir.y);
+                    animator.SetFloat(Speed, speed);
                 }
                 else
                 {
                     animator.SetFloat(MoveX, 0);
                     animator.SetFloat(MoveY, 0);
                     animator.SetFloat(Speed, 0);
-
-                    prevAnimValues = Vector2.zero;
-                    prevSpeed = 0f;
                 }
             }
 
-            if (weaponManager != null)
-            {
-                var weapon = weaponManager.GetCurrentWeapon();
-                if (weapon != null)
-                    weapon.SetLookDirection(lookDir, weaponManager.NetworkObject.NetworkObjectId);
-            }
+            weaponManager?.GetCurrentWeapon()?.SetLookDirection(smoothLookDir);
+            flashlightController?.UpdateLookDirection(smoothLookDir);
+        }
 
-            if (flashlightController != null)
-            {
-                flashlightController.UpdateLookDirection(lookDir);
-            }
+        private void Update()
+        {
+            PlayerController controller = GetComponent<PlayerController>();
+            if (controller == null || controller.IsOwner) return;
+
+            smoothLookDir = Vector2.Lerp(smoothLookDir, targetLookDir, Time.deltaTime * 30f);
+            UpdateLookDirection(smoothLookDir, controller.MoveInput.Value);
         }
 
         private void PlayHitEffect()

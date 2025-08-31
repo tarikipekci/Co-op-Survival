@@ -1,45 +1,42 @@
-using Manager;
 using Unity.Netcode;
 using UnityEngine;
 using System.Collections;
+using Manager;
 
 namespace Player
 {
     [RequireComponent(typeof(NetworkObject))]
+    [RequireComponent(typeof(Rigidbody2D))]
     public class PlayerController : NetworkBehaviour
     {
-        private PlayerModel model;
+        private Rigidbody2D rb;
         private PlayerView view;
         private Camera _camera;
         private PlayerData playerData;
+        private PlayerModel model;
 
-        private Vector2 moveInput;
-        private Vector2 lookDir;
-        private Vector2 lastSentLookDir;
-
-        private float movementTimer;
-        private const float movementSendInterval = 0.05f;
-
-        public NetworkVariable<Vector2> LookDirection = new(writePerm: NetworkVariableWritePermission.Owner);
-
-        [SerializeField] private GameObject cameraPrefab;
+        public NetworkVariable<Vector2> MoveInput = new(writePerm: NetworkVariableWritePermission.Owner);
+        public NetworkVariable<Vector2> LookDir = new(writePerm: NetworkVariableWritePermission.Owner);
 
         public override void OnNetworkSpawn()
         {
             view = GetComponent<PlayerView>();
-            if (view == null)
-                Debug.LogError("PlayerView component not found!");
+            rb = GetComponent<Rigidbody2D>();
         }
 
         private void Start()
         {
+            if (IsOwner)
+                _camera = Camera.main;
+
             if (PlayerDataManager.Instance == null || PlayerDataManager.Instance.GetOrCreatePlayerData(OwnerClientId) == null)
             {
                 StartCoroutine(WaitForPlayerData());
-                return;
             }
-
-            InitializePlayerData();
+            else
+            {
+                InitializePlayerData();
+            }
         }
 
         private IEnumerator WaitForPlayerData()
@@ -48,7 +45,6 @@ namespace Player
                 PlayerDataManager.Instance != null &&
                 PlayerDataManager.Instance.GetOrCreatePlayerData(OwnerClientId) != null
             );
-
             InitializePlayerData();
         }
 
@@ -65,51 +61,34 @@ namespace Player
             {
                 GameManager.Instance.AssignCameraToPlayer(transform);
                 _camera = GameManager.Instance.GetCamera();
-                if (_camera == null)
-                    Debug.LogError("Camera could not be assigned!");
             }
         }
 
         private void Update()
         {
-            if (!IsOwner || playerData == null || _camera == null) return;
+            if (!IsOwner || model == null) return;
 
-            moveInput.Set(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
-            moveInput.Normalize();
+            Vector2 input = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical")).normalized;
+            MoveInput.Value = input;
 
-            Vector3 mouseWorldPos = _camera.ScreenToWorldPoint(Input.mousePosition);
-            mouseWorldPos.z = 0;
-            lookDir.Set(mouseWorldPos.x - transform.position.x, mouseWorldPos.y - transform.position.y);
-            lookDir.Normalize();
+            Vector3 mouseWorld = _camera.ScreenToWorldPoint(Input.mousePosition);
+            mouseWorld.z = 0;
+            LookDir.Value = (mouseWorld - transform.position).normalized;
 
-            if ((lastSentLookDir - lookDir).sqrMagnitude > 0.05f)
-            {
-                lastSentLookDir = lookDir;
-                LookDirection.Value = lookDir;
-            }
-
-            view.Move(moveInput, model.MoveSpeed, lookDir);
-
-            movementTimer += Time.deltaTime;
-            if (movementTimer >= movementSendInterval)
-            {
-                movementTimer = 0;
-                SubmitMovementServerRpc(moveInput, lookDir, model.MoveSpeed);
-            }
+            view.UpdateLookDirection(LookDir.Value, MoveInput.Value);
         }
 
-        [ServerRpc]
-        private void SubmitMovementServerRpc(Vector2 input, Vector2 lookDirection, float moveSpeed)
+        private void FixedUpdate()
         {
-            if (model == null) return;
-            BroadcastMovementClientRpc(input, lookDirection, moveSpeed);
-        }
+            if (rb == null || model == null) return;
 
-        [ClientRpc]
-        private void BroadcastMovementClientRpc(Vector2 input, Vector2 lookDirection, float moveSpeed)
-        {
-            if (IsOwner) return;
-            view.Move(input, moveSpeed, lookDirection);
+            // Owner client prediction
+            if (IsOwner)
+                rb.linearVelocity = MoveInput.Value * model.MoveSpeed;
+
+            // Server authoritative
+            if (IsServer)
+                rb.linearVelocity = MoveInput.Value * model.MoveSpeed;
         }
 
         public PlayerView GetView() => view;

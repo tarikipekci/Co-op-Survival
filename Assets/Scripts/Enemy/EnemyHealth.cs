@@ -66,12 +66,12 @@ namespace Enemy
         private void Die()
         {
             if (!IsServer) return;
+            PlayDeathClientRpc();
 
             if (WaveManager.Instance.currentBossHealth == this)
                 WaveManager.Instance.currentBossHealth = null;
 
             NetworkPoolManager.Instance.Despawn(NetworkObject);
-            PlayDeathClientRpc();
         }
 
         [ClientRpc]

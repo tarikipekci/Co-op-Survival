@@ -41,8 +41,8 @@ namespace Manager
                     continue;
                 }
 
-                pools[prefab].Enqueue(netObj);
                 prefabMap[netObj] = prefab;
+                pools[prefab].Enqueue(netObj);
             }
         }
 
@@ -58,12 +58,11 @@ namespace Manager
             if (pools[prefab].Count > 0)
             {
                 obj = pools[prefab].Dequeue();
-                obj.transform.position = position;
-                obj.transform.rotation = rotation;
+                obj.transform.SetPositionAndRotation(position, rotation);
                 obj.gameObject.SetActive(true);
 
                 if (!obj.IsSpawned)
-                    obj.Spawn(true);
+                    obj.Spawn(true); 
             }
             else
             {
@@ -82,29 +81,18 @@ namespace Manager
         {
             if (!IsServer || obj == null) return;
 
+            if (obj.IsSpawned)
+                obj.Despawn(false); 
+
             obj.gameObject.SetActive(false);
 
-            DespawnClientRpc(obj.NetworkObjectId);
-
             if (!prefabMap.TryGetValue(obj, out GameObject prefab))
-            {
                 prefab = obj.gameObject;
-            }
 
             if (!pools.ContainsKey(prefab))
                 pools[prefab] = new Queue<NetworkObject>();
 
             pools[prefab].Enqueue(obj);
-        }
-
-        [ClientRpc]
-        private void DespawnClientRpc(ulong networkObjectId)
-        {
-            if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(networkObjectId,
-                    out NetworkObject obj))
-            {
-                obj.gameObject.SetActive(false);
-            }
         }
     }
 }

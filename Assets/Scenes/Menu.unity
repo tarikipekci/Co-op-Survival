@@ -3616,6 +3616,26 @@ PrefabInstance:
       propertyPath: NetworkConfig.PlayerPrefab
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 2846579584312845269, guid: a8c8d1f3f8eb3ed439d6a4ce740e4b2b, type: 3}
+      propertyPath: m_UseEncryption
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2846579584312845269, guid: a8c8d1f3f8eb3ed439d6a4ce740e4b2b, type: 3}
+      propertyPath: m_MaxPayloadSize
+      value: 1300
+      objectReference: {fileID: 0}
+    - target: {fileID: 2846579584312845269, guid: a8c8d1f3f8eb3ed439d6a4ce740e4b2b, type: 3}
+      propertyPath: m_MaxConnectAttempts
+      value: 12
+      objectReference: {fileID: 0}
+    - target: {fileID: 2846579584312845269, guid: a8c8d1f3f8eb3ed439d6a4ce740e4b2b, type: 3}
+      propertyPath: m_MaxPacketQueueSize
+      value: 256
+      objectReference: {fileID: 0}
+    - target: {fileID: 2846579584312845269, guid: a8c8d1f3f8eb3ed439d6a4ce740e4b2b, type: 3}
+      propertyPath: m_DisconnectTimeoutMS
+      value: 12000
+      objectReference: {fileID: 0}
     - target: {fileID: 6071894296766979043, guid: a8c8d1f3f8eb3ed439d6a4ce740e4b2b, type: 3}
       propertyPath: m_Name
       value: NetworkManager

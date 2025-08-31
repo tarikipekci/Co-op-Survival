@@ -53,7 +53,7 @@ namespace Manager
             PlayerController controller = GetComponent<PlayerController>();
             if (controller == null) return true;
 
-            Vector2 lookDir = controller.LookDirection.Value;
+            Vector2 lookDir = controller.LookDir.Value;
             return lookDir.x >= 0;
         }
 
