@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 754094778357563741}
   - component: {fileID: 5383785618697784804}
   - component: {fileID: 6321640796600809804}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: HealthPickup
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -139,7 +139,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 2302476498
+  GlobalObjectIdHash: 47076261
   InScenePlacedSourceGlobalObjectIdHash: 0
   DeferredDespawnTick: 0
   Ownership: 1
