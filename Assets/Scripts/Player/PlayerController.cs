@@ -18,10 +18,22 @@ namespace Player
         public NetworkVariable<Vector2> MoveInput = new(writePerm: NetworkVariableWritePermission.Owner);
         public NetworkVariable<Vector2> LookDir = new(writePerm: NetworkVariableWritePermission.Owner);
 
+        [SerializeField] private float invincibleTime = 2;
+        [SerializeField] private float blinkSpeed = 0.1f;
+        [HideInInspector] public NetworkVariable<bool> IsInvincible = new NetworkVariable<bool>();
+
         public override void OnNetworkSpawn()
         {
             view = GetComponent<PlayerView>();
             rb = GetComponent<Rigidbody2D>();
+
+            IsInvincible.OnValueChanged += OnInvincibleChanged;
+
+            if (IsServer)
+            {
+                if (IsInvincible.Value)
+                    StartCoroutine(BlinkRoutine());
+            }
         }
 
         private void Start()
@@ -29,7 +41,8 @@ namespace Player
             if (IsOwner)
                 _camera = Camera.main;
 
-            if (PlayerDataManager.Instance == null || PlayerDataManager.Instance.GetOrCreatePlayerData(OwnerClientId) == null)
+            if (PlayerDataManager.Instance == null ||
+                PlayerDataManager.Instance.GetOrCreatePlayerData(OwnerClientId) == null)
             {
                 StartCoroutine(WaitForPlayerData());
             }
@@ -92,5 +105,46 @@ namespace Player
         }
 
         public PlayerView GetView() => view;
+
+        public void ActivateInvincibility()
+        {
+            if (!IsServer) return;
+
+            IsInvincible.Value = true;
+
+            StartCoroutine(InvincibleTimeout());
+        }
+
+        private IEnumerator InvincibleTimeout()
+        {
+            yield return new WaitForSeconds(invincibleTime);
+            IsInvincible.Value = false;
+        }
+
+        private void OnInvincibleChanged(bool oldVal, bool newVal)
+        {
+            if (view == null || view.GetSpriteRenderer() == null) return;
+
+            StopAllCoroutines();
+
+            if (newVal)
+                StartCoroutine(BlinkRoutine());
+            else
+                view.GetSpriteRenderer().enabled = true;
+        }
+
+        private IEnumerator BlinkRoutine()
+        {
+            while (IsInvincible.Value)
+            {
+                if (view != null && view.GetSpriteRenderer() != null)
+                    view.GetSpriteRenderer().enabled = !view.GetSpriteRenderer().enabled;
+
+                yield return new WaitForSeconds(blinkSpeed);
+            }
+
+            if (view != null && view.GetSpriteRenderer() != null)
+                view.GetSpriteRenderer().enabled = true;
+        }
     }
 }

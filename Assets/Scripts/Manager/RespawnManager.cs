@@ -48,6 +48,9 @@ namespace Manager
             var playerHealth = playerInstance.GetComponent<PlayerHealth>();
             playerHealth.FullHealth();
 
+            var playerController = playerInstance.GetComponent<PlayerController>();
+            playerController?.ActivateInvincibility();
+
             var dayNightManager = FindAnyObjectByType<DayNightManager>();
             if (dayNightManager != null && dayNightManager.IsNight())
             {

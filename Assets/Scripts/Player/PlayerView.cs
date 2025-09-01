@@ -88,5 +88,10 @@ namespace Player
         {
             PlayHitEffect();
         }
+
+        public SpriteRenderer GetSpriteRenderer()
+        {
+            return spriteRenderer;
+        }
     }
 }

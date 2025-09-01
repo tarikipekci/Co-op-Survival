@@ -474,6 +474,10 @@ MonoBehaviour:
     m_InternalValue: {x: 0, y: 0}
   LookDir:
     m_InternalValue: {x: 0, y: 0}
+  invincibleTime: 2
+  blinkSpeed: 0.1
+  IsInvincible:
+    m_InternalValue: 0
 --- !u!114 &1276533809324958832
 MonoBehaviour:
   m_ObjectHideFlags: 0

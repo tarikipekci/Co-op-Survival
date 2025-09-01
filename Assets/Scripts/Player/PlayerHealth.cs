@@ -101,10 +101,13 @@ namespace Player
         [ServerRpc(RequireOwnership = false)]
         public void TakeDamageServerRpc(int damage)
         {
-            if (IsServer)
-            {
-                currentHealth.Value = Mathf.Max(currentHealth.Value - damage, 0);
-            }
+            if (!IsServer) return;
+
+            var playerController = GetComponent<PlayerController>();
+            if (playerController != null && playerController.IsInvincible.Value)
+                return;
+
+            currentHealth.Value = Mathf.Max(currentHealth.Value - damage, 0);
         }
 
         private IEnumerator DelayedDestroy()
@@ -126,7 +129,7 @@ namespace Player
         {
             return maxHealth;
         }
-
+        
         public void IncreaseCurrentHealth(int amount)
         {
             if (!IsServer) return;
