@@ -125,7 +125,7 @@ namespace Manager
         }
 
         [ClientRpc]
-        public void SetBossBarActiveClientRpc(bool isActive)
+        private void SetBossBarActiveClientRpc(bool isActive)
         {
             if (UIManager.Instance != null)
                 UIManager.Instance.SetBossBarActive(isActive);

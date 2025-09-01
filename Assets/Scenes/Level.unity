@@ -96790,6 +96790,9 @@ MonoBehaviour:
   bossZombiePrefab: {fileID: 3624296893283097346, guid: 4d75dc5d11738e94aa889828730cd705, type: 3}
   playerBulletPrefab: {fileID: 6219810915904028772, guid: baae1790c5f9f764582311332ff62976, type: 3}
   enemyProjectilePrefab: {fileID: 6219810915904028772, guid: 380a8840603c4154892348b22a7b945a, type: 3}
+  xpPrefab: {fileID: 8045988666215530684, guid: b872b7786c4075a4eb31eeb74daf439e, type: 3}
+  healthPickupPrefab: {fileID: 8622151153467637654, guid: 42761d8be3a3359418eeb120943ff15f, type: 3}
+  itemBoxPrefab: {fileID: 4332588218913842326, guid: 888c23cadb7e7be4b9d1b24239003146, type: 3}
 --- !u!4 &1031171167
 Transform:
   m_ObjectHideFlags: 0

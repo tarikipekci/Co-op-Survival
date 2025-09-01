@@ -80,7 +80,10 @@ namespace Environment
                 followRoutine = null;
             }
 
-            NetworkObject.Despawn();
+            if (NetworkObject != null && NetworkObject.IsSpawned)
+            {
+                Manager.NetworkPoolManager.Instance.Despawn(NetworkObject);
+            }
         }
     }
 }

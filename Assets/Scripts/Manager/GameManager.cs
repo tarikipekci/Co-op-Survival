@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using Unity.Netcode;
 using CameraBehavior;
+using UnityEngine.Serialization;
 
 namespace Manager
 {
@@ -23,6 +24,11 @@ namespace Manager
         [Header("Projectiles for Pooling")]
         [SerializeField] private GameObject playerBulletPrefab;
         [SerializeField] private GameObject enemyProjectilePrefab;
+
+        [Header("Environment for Pooling")] [SerializeField]
+        private GameObject xpPrefab;
+        [SerializeField] private GameObject healthPickupPrefab;
+        [SerializeField] private GameObject itemBoxPrefab;
 
         private Camera _camera;
 
@@ -77,8 +83,14 @@ namespace Manager
             NetworkPoolManager.Instance.Preload(playerBulletPrefab, 50);
             NetworkPoolManager.Instance.Preload(enemyProjectilePrefab, 50);
 
+            //Environment
+            NetworkPoolManager.Instance.Preload(xpPrefab, 50);
+            NetworkPoolManager.Instance.Preload(healthPickupPrefab, 5);
+            NetworkPoolManager.Instance.Preload(itemBoxPrefab, 5);
+
             Debug.Log("[GameManager] All prefabs preloaded in NetworkPoolManager");
         }
+
         #endregion
 
         #region Camera & Player

@@ -17,7 +17,7 @@ namespace Environment
                 Invoke(nameof(SelfDestruct), lifetime);
             }
         }
-
+        
         private void OnTriggerEnter2D(Collider2D other)
         {
             if (!IsServer) return;
@@ -31,15 +31,34 @@ namespace Environment
                     Debug.Log("Picked up effect");
                 }
 
-                if (NetworkObject.IsSpawned && applyResult)
-                    NetworkObject.Despawn();
+                if (applyResult && NetworkObject != null && NetworkObject.IsSpawned)
+                {
+                    Manager.NetworkPoolManager.Instance.Despawn(NetworkObject);
+                }
             }
         }
 
         private void SelfDestruct()
         {
-            if (NetworkObject.IsSpawned)
-                NetworkObject.Despawn();
+            if (!IsServer) return;
+            if (NetworkObject != null && NetworkObject.IsSpawned)
+                Manager.NetworkPoolManager.Instance.Despawn(NetworkObject);
+        }
+
+        private void OnEnable()
+        {
+            if (IsServer)
+            {
+                Invoke(nameof(SelfDestruct), lifetime);
+            }
+        }
+
+        private void OnDisable()
+        {
+            if (IsServer)
+            {
+                CancelInvoke(nameof(SelfDestruct));
+            }
         }
     }
 }

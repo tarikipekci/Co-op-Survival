@@ -14,12 +14,7 @@ namespace Environment
             if (possibleItems == null || possibleItems.Length == 0) return;
 
             GameObject prefabToDrop = possibleItems[Random.Range(0, possibleItems.Length)];
-            GameObject instance = Instantiate(prefabToDrop, position, Quaternion.identity);
-
-            if (instance.TryGetComponent<NetworkObject>(out var netObj))
-            {
-                netObj.Spawn();
-            }
+            Manager.NetworkPoolManager.Instance.Spawn(prefabToDrop, position, Quaternion.identity);
         }
     }
 }

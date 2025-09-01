@@ -1,4 +1,5 @@
 using UnityEngine;
+using Unity.Netcode;
 
 namespace Environment
 {
@@ -9,16 +10,16 @@ namespace Environment
 
         public void Initialize(Manager.ItemBoxManager itemBoxManager, Transform point)
         {
-            this.manager = itemBoxManager;
-            this.spawnPoint = point;
+            manager = itemBoxManager;
+            spawnPoint = point;
         }
 
-        private void OnDestroy()
+        private void OnDisable()
         {
-            if (manager != null)
-            {
-                manager.OnBoxDestroyed(spawnPoint);
-            }
+            if (!NetworkManager.Singleton || !NetworkManager.Singleton.IsServer) return;
+            if (manager == null || spawnPoint == null) return;
+
+            manager.OnBoxDestroyed(spawnPoint);
         }
     }
 }

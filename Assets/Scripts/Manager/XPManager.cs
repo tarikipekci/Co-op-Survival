@@ -104,15 +104,17 @@ namespace Manager
         {
             yield return new WaitForSeconds(delay);
 
-            GameObject xpObj = Instantiate(xpPickupPrefab, position, Quaternion.identity);
-            var netObj = xpObj.GetComponent<NetworkObject>();
-            netObj.Spawn();
+            NetworkObject netObj = NetworkPoolManager.Instance.Spawn(xpPickupPrefab, position, Quaternion.identity);
+            if (netObj != null)
+            {
+                var xpObj = netObj.gameObject;
+                var xp = xpObj.GetComponent<XPPickup>();
 
-            var xp = xpObj.GetComponent<XPPickup>();
-            xp.xpValue = amount;
-            xp.Activate(position);
+                xp.xpValue = amount;
+                xp.Activate(position);
 
-            Debug.Log("XP spawned after delay.");
+                Debug.Log("XP spawned after delay.");
+            }
         }
 
         public override void OnNetworkDespawn()
