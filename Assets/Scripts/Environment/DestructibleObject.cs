@@ -1,4 +1,5 @@
 using Interface;
+using Manager;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -18,6 +19,12 @@ namespace Environment
         {
             currentHealth = maxHealth;
             dropProvider = GetComponent<IDropProvider>();
+        }
+
+        private void OnEnable()
+        {
+            isDead = false;
+            currentHealth = maxHealth;
         }
 
         public void TakeDamage(int amount)
@@ -52,11 +59,8 @@ namespace Environment
             PlayDestroyEffectClientRpc(transform.position);
 
             dropProvider?.Drop(transform.position);
-
-            if (NetworkObject.IsSpawned)
-                NetworkObject.Despawn();
-            else
-                Destroy(gameObject);
+            
+            NetworkPoolManager.Instance.Despawn(NetworkObject);
         }
 
         [ClientRpc]

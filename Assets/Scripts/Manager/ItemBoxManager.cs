@@ -18,7 +18,13 @@ namespace Manager
         public override void OnNetworkSpawn()
         {
             if (IsServer)
-                SpawnAllBoxes();
+                StartCoroutine(SpawnAllBoxesWithDelay());
+        }
+
+        private IEnumerator SpawnAllBoxesWithDelay()
+        {
+            yield return new WaitForSeconds(2f);
+            SpawnAllBoxes();
         }
 
         private void SpawnAllBoxes()

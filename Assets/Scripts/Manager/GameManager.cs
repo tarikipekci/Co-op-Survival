@@ -2,13 +2,13 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using Unity.Netcode;
 using CameraBehavior;
-using UnityEngine.Serialization;
 
 namespace Manager
 {
     public class GameManager : MonoBehaviour
     {
         public static GameManager Instance { get; private set; }
+        private int playerSpawnIndex;
 
         [Header("Player & Camera")]
         [SerializeField] private GameObject cameraPrefab;
@@ -137,9 +137,14 @@ namespace Manager
             if (playerObject == null)
             {
                 Debug.Log($"Spawning player for client {clientId}");
-                var playerInstance = Instantiate(playerPrefab);
+
+                Vector3 spawnPos = new Vector3(playerSpawnIndex * 1f, 0f, 0f);
+
+                var playerInstance = Instantiate(playerPrefab, spawnPos, Quaternion.identity);
                 var networkObject = playerInstance.GetComponent<NetworkObject>();
                 networkObject.SpawnAsPlayerObject(clientId);
+
+                playerSpawnIndex++;
             }
             else
             {

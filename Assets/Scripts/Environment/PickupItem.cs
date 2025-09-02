@@ -22,7 +22,7 @@ namespace Environment
         {
             if (!IsServer) return;
 
-            if (other.CompareTag("Player"))
+            if (other.CompareTag("Player") && !applyResult)
             {
                 Debug.Log("player entered");
                 if (TryGetComponent<IPickupEffect>(out var effect))
